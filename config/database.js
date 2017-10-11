@@ -1,4 +1,4 @@
 module.exports = {
 
-    'url' : DB_URL
+    'url' : MONGODB_URI
 };
