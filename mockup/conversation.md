@@ -21,12 +21,12 @@
 <b>U:</b>  Ero ad un parco
 
 <b>R:</b>  Ottimo, ho trovato 15 parchi a Trento, TN
-    https://www.google.it/maps/search/trento,+parks/@46.0807545,11.0503153,12z/data=!3m1!4b1
+    https://www.google.it/maps/search/trento+parks/
     Ricordi qualche punto di interesse vicino?
 
 <b>U:</b>  Era vicino all'ospedale Santa Chiara
 
-<b>R:</b>  Ho trovato il "Comune di Trento - Parco di Gocciadoro"
+<b>R:</b>  Ho trovato "Comune di Trento - Parco di Gocciadoro"
     https://goo.gl/maps/8U69PSu59Bq
     E' questo il luogo
 
