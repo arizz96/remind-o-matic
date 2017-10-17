@@ -11,7 +11,7 @@ La chiamata viene eseguita, tramite il metodo `GET`, all'indirizzo: `https://api
 * `ll`: latutudine e longitudine separate da virgola (`44.3,37.2`)
 * `near`: luogo dove si esegue la ricerca (`Chicago, IL`)
 * `query`: oggetto della ricerca (`pizzeria`)
-* `categoryId`: id delle possibili categorie, separate da `,` (`4bf58dd8d488d11094, 4bf58dd8d1bd941735`). La lista completa è reperibile [qui](`https://developer.foursquare.com/docs/resources/categories`)
+* `categoryId`: id delle possibili categorie, separate da `,` (`4bf58dd8d488d11094, 4bf58dd8d1bd941735`). La lista completa è reperibile [qui](https://developer.foursquare.com/docs/resources/categories)
 * `limit`: numero massimo di risultati
 
 **NB**: è necessario impostare per ogni chiamata almeno un uno fra i parametri `ll` e `near`
