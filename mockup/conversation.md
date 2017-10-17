@@ -30,6 +30,11 @@
     https://goo.gl/maps/8U69PSu59Bq
     E' questo il luogo
 
+<b>U:</b>  No, però credo fosse lì vicino
+
+<b>R:</b>  Era "Giardino Maria Teresa D'Asburgo?
+           https://www.google.it/maps/place/Giardino+Maria+Teresa+D'Asburgo
+
 <b>U:</b>  Sì, grazie? Ora ricordo.
 
 <b>R:</b>  Evento generato
