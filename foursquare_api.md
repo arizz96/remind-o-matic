@@ -1,9 +1,9 @@
-#Foursquare API
+# Foursquare API
 
-###Informazioni generali
+### Informazioni generali
 Per sfruttare le api di foursquare senza la necessità che l'utente sia autenticato utilizziamo il nostro account "server". Ogni richiesta richiederà quindi dei parametri contenenti le informazioni del nostro utente nel mezzo per accedere all'endpoint. La versione free, senza verifica della carta di credito prevede 1000 richieste al giorno. Per il momento sfrutteremo questa.
 
-###Eseguire la ricerca di un posto
+### Eseguire la ricerca di un posto
 La chiamata viene eseguita, tramite il metodo `GET`, all'indirizzo: `https://api.foursquare.com/v2/venues/search`. I parametri da settare saranno:
 * `client_id`: usiamo la variabile `FSQ_CLIENT_ID`
 * `client_secret`: usiamo la variabile `FSQ_CLIENT_SECRET`
