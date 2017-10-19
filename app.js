@@ -1,7 +1,8 @@
 var express = require('express');
 
 var app = express();
-require('dotenv').config()
+var dotenv = require('dotenv').config();
+var i18n = require("i18n");
 var multer = require('multer')
 var constants = require('constants');
 var constant = require('./config/constants');
@@ -22,6 +23,13 @@ var now = new Date();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
+// I18n config
+i18n.configure({
+    locales:['it', 'en'],
+    directory: __dirname + '/locales'
+});
+app.use(i18n.init);
 
 /***************Mongodb configuratrion********************/
 var mongoose = require('mongoose');
