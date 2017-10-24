@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var dotenv = require('dotenv').config();
 var i18n = require("i18n");
+var apiai = require('apiai');
 var multer = require('multer')
 var constants = require('constants');
 var constant = require('./config/constants');
@@ -30,6 +31,8 @@ i18n.configure({
     directory: __dirname + '/locales'
 });
 app.use(i18n.init);
+apiai(process.env.DIALOGFLOW_CLIENT_KEY);
+app.use(apiai)
 
 /***************Mongodb configuratrion********************/
 var mongoose = require('mongoose');
