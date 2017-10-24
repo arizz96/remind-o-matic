@@ -1,12 +1,15 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
+var expressSession = require('express-session');
 
 var app = express();
 var dotenv = require('dotenv').config();
 var i18n = require("i18n");
-var apiai = require('apiai');
 var multer = require('multer')
 var constants = require('constants');
 var constant = require('./config/constants');
+var apiai = require('apiai');
+global.ai = apiai(process.env.DIALOGFLOW_DEV_KEY);
 
 var port = process.env.PORT || 8042;
 var mongoose = require('mongoose');
@@ -31,8 +34,6 @@ i18n.configure({
     directory: __dirname + '/locales'
 });
 app.use(i18n.init);
-apiai(process.env.DIALOGFLOW_CLIENT_KEY);
-app.use(apiai)
 
 /***************Mongodb configuratrion********************/
 var mongoose = require('mongoose');
@@ -53,6 +54,18 @@ app.set('view engine', 'ejs');
 // routes ======================================================================
 require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+// session
+app.use(cookieParser());
+app.use(expressSession({
+  secret: 'stringaqualunque',
+  resave: false,
+  saveUninitialized: true
+}));
+app.use(function(req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
+
 //launch ======================================================================
 app.listen(port);
 console.log('The magic happens on port ' + port);
@@ -66,3 +79,4 @@ app.use(function (req, res, next) {
     res.status(500).render('404', {title: "Sorry, page not found"});
 });
 exports = module.exports = app;
+exports.ai = ai;
