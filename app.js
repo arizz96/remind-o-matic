@@ -11,6 +11,11 @@ var constant = require('./config/constants');
 var apiai = require('apiai');
 global.ai = apiai(process.env.DIALOGFLOW_DEV_KEY);
 
+var googleMaps = require('@google/maps')
+global.maps = googleMaps.createClient({
+  key: process.env.MAPS_KEY
+});
+
 var port = process.env.PORT || 8042;
 var mongoose = require('mongoose');
 var passport = require('passport');
