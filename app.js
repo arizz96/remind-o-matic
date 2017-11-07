@@ -11,7 +11,7 @@ var constant = require('./config/constants');
 var apiai = require('apiai');
 global.ai = apiai(process.env.DIALOGFLOW_DEV_KEY);
 
-var googleMaps = require('@google/maps')
+var googleMaps = require('@google/maps');
 global.maps = googleMaps.createClient({
   key: process.env.MAPS_KEY
 });

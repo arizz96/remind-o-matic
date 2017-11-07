@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "@google/maps": "^0.4.5",
     "apiai": "^4.0.3",
     "async": "latest",
     "basic-auth-connect": "latest",
