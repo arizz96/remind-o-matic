@@ -9,6 +9,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="./style/css/bootstrap.min.css">
     <link rel="stylesheet" href="./style/style.css">
+    <link rel="stylesheet" href="./style/chat.css">
+
   </head>
   <body>
     <header class="row color1 justify-content-between">
@@ -22,7 +24,56 @@
             <button class="btn h-button" type="button">info</button>
         </div>
     </header>
-    <div>
+    <!-- Chat body -->
+    <div class="row justify-between">
+      <div class="col-lg-3"></div>
+      <div class="col-lg-6">
+        <div class="chat_window">
+          <ul class="messages">
+          </ul>
+
+          <div class="bottom_wrapper clearfix">
+            <div class="message_input_wrapper">
+              <input class="message_input" placeholder="Type your message here..." />
+            </div>
+
+            <div class="send_message">
+              <div class="icon"></div>
+              <div class="text">Send</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3"></div>
+
+
+
+
+
+      <!-- <div class="chat_window">
+        <ul class="messages">
+        </ul>
+
+        <div class="bottom_wrapper clearfix">
+          <div class="message_input_wrapper">
+            <input class="message_input" placeholder="Type your message here..." />
+          </div>
+
+          <div class="send_message">
+            <div class="icon"></div>
+            <div class="text">Send</div>
+          </div>
+        </div>
+      </div> -->
+
+    <div class="message_template">
+      <li class="message">
+        <div class="avatar"></div>
+        <div class="text_wrapper">
+          <div class="text"></div>
+        </div>
+      </li>
+    </div>
 
     </div>
     <footer>
@@ -33,5 +84,6 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="./script/chat.js"></script>
   </body>
 </html>
