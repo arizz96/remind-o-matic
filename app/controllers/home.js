@@ -1,6 +1,6 @@
 var numeral = require('numeral');
 var dateFormat = require('dateformat');
-var poisearch = require('placesearch');
+var poisearch = require('../modules/placesearch');
 
 exports.welcome = function(req, res) {
   console.log(req);
