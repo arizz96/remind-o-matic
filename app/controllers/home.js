@@ -36,32 +36,27 @@ exports.ask = function(req, res) {
 }
 
 exports.place = function(req, res) {
-  var jsonGeocode;
+  const keyword = req.query.keyword
+  // console.log(req.query.location);
   // get place coordinates
   maps.geocode({
-    address: '1600 Amphitheatre Parkway, Mountain View, CA'
+    address: req.query.location
   }, function(err, response) {
     if (!err) {
-      console.log(response.json.results);
-      jsonGeocode = response.json.results;
+      var parameters = {};
+      // console.log(response.json.results[0].geometry.location);
+      parameters.location = response.json.results[0].geometry.location.lat + "," + response.json.results[0].geometry.location.lng;
+      parameters.key = process.env.MAPS_KEY;
+      parameters.rankby = "distance";
+      parameters.keyword = keyword;
+      parameters.limit = process.env.LIMIT;
+      // console.log(parameters);
+
+      poisearch.nearbysearch(parameters, process.env.FORMAT, function(statusCode, result) {
+        res.statusCode = statusCode;
+        res.send(result);
+      });
     }
-  });
-
-  console.log(jsonGeocode);
-
-  // get attraction near the founded place
-  var parameters = {
-    location : '45.6448315,11.3024802',
-    key : process.env.MAPS_KEY,
-    rankby : 'distance',
-    keyword : 'pizzeria'
-  };
-
-  poisearch.nearbysearch(parameters, process.env.FORMAT, function(statusCode, result) {
-    // I could work with the result html/json here.  I could also just return it
-    // console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
-    res.statusCode = statusCode;
-    res.send(result);
   });
 
 }
