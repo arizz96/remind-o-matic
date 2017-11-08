@@ -23,14 +23,14 @@
             $message_input = $('.message_input');
             return $message_input.val();
         };
-        sendMessage = function (text) {
+        sendMessage = function (text, side) {
             var $messages, message;
             if (text.trim() === '') {
                 return;
             }
             $('.message_input').val('');
             $messages = $('.messages');
-            message_side = message_side === 'left' ? 'right' : 'left';
+            message_side = side;
             message = new Message({
                 text: text,
                 message_side: message_side
@@ -39,19 +39,14 @@
             return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
         };
         $('.send_message').click(function (e) {
-            return sendMessage(getMessageText());
+            return sendMessage(getMessageText(),'right');
         });
         $('.message_input').keyup(function (e) {
             if (e.which === 13) {
-                return sendMessage(getMessageText());
+                return sendMessage(getMessageText(),'right');
             }
         });
-        sendMessage('Hello Philip! :)');
-        setTimeout(function () {
-            return sendMessage('Hi Sandy! How are you?');
-        }, 1000);
-        return setTimeout(function () {
-            return sendMessage('I\'m fine, thank you!');
-        }, 2000);
+        //message_side = 'left';
+        sendMessage("Hi i'm Remind-o-Matic!\n How can I help you?", 'left');
     });
 }.call(this));

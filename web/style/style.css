@@ -1,3 +1,13 @@
+html{
+  height: 100%
+}
+
+body {
+  font-family: "Calibri", "Roboto", sans-serif;
+  min-height: 100%;
+  height:100%
+}
+
 #ico{
   height : 50px;
   width :auto;
@@ -9,25 +19,39 @@
   font-size : 3.5vh;
 }
 
-#chatbox{
-  background-color: #dcdcdc
-}
-
-
 .h-button{
   display: table;
-  margin-left: auto;
+  margin-left: auto
 /*  width: 10%;
   margin-right: 45%;
   margin-left: 45%;*/
 }
 
-header{
+.my-header{
+  height: 10%;
+  min-height: 10%;
   margin-right: 0px;
   margin-left: 0px;
   padding: 15px
-
 }
+
+.my-footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right:0;
+  overflow: auto
+}
+
+.chat-container{
+  min-height:80%;
+  position:fixed;
+  top:10%;
+  bottom:10%;
+  overflow-y: scroll;
+  width: -webkit-fill-available
+}
+
 .color1{
   background-color: #36453B;
   color: #36453B
