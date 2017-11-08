@@ -36,7 +36,8 @@ exports.ask = function(req, res) {
 }
 
 exports.place = function(req, res) {
-  const keyword = req.query.keyword
+  const keyword = req.query.keyword;
+  const rankby = req.query.rankby;
   // console.log(req.query.location);
   // get place coordinates
   maps.geocode({
@@ -47,7 +48,9 @@ exports.place = function(req, res) {
       // console.log(response.json.results[0].geometry.location);
       parameters.location = response.json.results[0].geometry.location.lat + "," + response.json.results[0].geometry.location.lng;
       parameters.key = process.env.MAPS_KEY;
-      parameters.rankby = "distance";
+      parameters.rankby = rankby;
+      if(rankby == "prominence")
+        parameters.radius = process.env.SEARCH_RADIUS
       parameters.keyword = keyword;
       parameters.limit = process.env.LIMIT;
       // console.log(parameters);
