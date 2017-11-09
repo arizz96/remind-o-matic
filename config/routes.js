@@ -8,8 +8,8 @@ module.exports = function (app, passport) {
 
   v1.get('/welcome', home.welcome);
   v1.post('/ask', home.ask);
-  v1.get('/place', home.place);
-  v1.get('/nearby', home.nearby);
+  //v1.get('/place', home.place);
+  //v1.get('/nearby', home.nearby);
 
   app.use('/api/v1', v1);
   app.use('/', v1); // Set the default version to latest.
