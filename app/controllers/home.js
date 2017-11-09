@@ -3,8 +3,6 @@ var dateFormat = require('dateformat');
 var poisearch = require('../modules/placesearch');
 
 exports.welcome = function(req, res) {
-  console.log(req);
-  res.cookie('test', 'test');
   res.json({
     action: 'welcome',
     status: 200,
@@ -24,7 +22,18 @@ exports.ask = function(req, res) {
     console.log(response);
 
     console.log(response.result.action);
-    res.end(response.result.action);
+    // res.end(response.result.action);
+
+    action = response.result.action;
+    action = action.substring(action.lastIndexOf('.') + 1);
+
+    console.log(action);
+    console.log(response.result.parameters);
+    console.log(req.headers['accept-language'])
+
+    customResponse = responses.handleAction(action, response.result.parameters, req);
+
+    res.json(customResponse);
   });
 
   request.on('error', function(error) {
