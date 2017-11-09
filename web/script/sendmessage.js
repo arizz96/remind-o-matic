@@ -16,12 +16,12 @@ Message = function (arg) {
 };
 
 function writeMessage (text, side) {
-  alert("writing message " + text);
+  // alert("writing message " + text);
   var $messages, message;
   if (text.trim() === '') {
       return;
   }
-  $('.message_input').val('');
+  //$('.message_input').val('');
   $messages = $('.messages');
   message_side = side;
   message = new Message({
@@ -29,15 +29,25 @@ function writeMessage (text, side) {
       message_side: message_side
   });
   message.draw();
-  return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
+  var elem = document.getElementById('chat_body');
+  elem.scrollTop = elem.scrollHeight;
+  // return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
-function readRequest(){
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function readRequest(){
+  // alert("inizio read");
+  // writeMessage('response', 'left');
+  // alert("stampato response");
   message_input = document.getElementsByClassName("message_input")[0];
   if(message_input != ""){
     writeMessage(message_input.value, 'right');
-    message_input.innerHTML = "";
-    // writeMessage('response', 'left');
+    message_input.value = "";
+    await sleep(1000);
+    writeMessage('response', 'left');
   }
 }
 
