@@ -15,7 +15,8 @@ Message = function (arg) {
     return this;
 };
 
-function sendTest (text, side) {
+function writeMessage (text, side) {
+  alert("writing message " + text);
   var $messages, message;
   if (text.trim() === '') {
       return;
@@ -30,3 +31,18 @@ function sendTest (text, side) {
   message.draw();
   return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
+
+function readRequest(){
+  message_input = document.getElementsByClassName("message_input")[0];
+  if(message_input != ""){
+    writeMessage(message_input.value, 'right');
+    message_input.innerHTML = "";
+    // writeMessage('response', 'left');
+  }
+}
+
+
+function checkSend(e){
+  if (e.keyCode == 13 && document.getElementsByClassName("message_input")[0].value != "")
+    readRequest();
+}
