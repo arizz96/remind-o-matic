@@ -1,6 +1,7 @@
 var numeral = require('numeral');
 var dateFormat = require('dateformat');
 var poisearch = require('../modules/placesearch');
+var responses = require('../modules/responses');
 
 exports.welcome = function(req, res) {
   res.json({
@@ -26,10 +27,6 @@ exports.ask = function(req, res) {
 
     action = response.result.action;
     action = action.substring(action.lastIndexOf('.') + 1);
-
-    console.log(action);
-    console.log(response.result.parameters);
-    console.log(req.headers['accept-language'])
 
     customResponse = responses.handleAction(action, response.result.parameters, req);
 
@@ -60,6 +57,7 @@ exports.place = function(req, res) {
       parameters.rankby = rankby;
       if(rankby == "prominence")
         parameters.radius = process.env.SEARCH_RADIUS
+
       parameters.keyword = keyword;
       parameters.limit = process.env.LIMIT;
       // console.log(parameters);
@@ -70,7 +68,6 @@ exports.place = function(req, res) {
       });
     }
   });
-
 }
 
 exports.answer = function(req, res) {
