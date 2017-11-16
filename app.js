@@ -13,7 +13,8 @@ global.ai = apiai(process.env.DIALOGFLOW_DEV_KEY);
 
 var googleMaps = require('@google/maps');
 global.maps = googleMaps.createClient({
-  key: process.env.MAPS_KEY
+  key: process.env.MAPS_KEY,
+  Promise: Promise
 });
 
 var port = process.env.PORT || 8042;

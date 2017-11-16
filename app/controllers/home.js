@@ -44,30 +44,32 @@ exports.ask = function(req, res) {
 exports.place = function(req, res) {
   const keyword = req.query.keyword;
   const rankby = req.query.rankby;
-  // console.log(req.query.location);
-  // get place coordinates
+
   maps.geocode({
     address: req.query.location
-  }, function(err, response) {
-    if (!err) {
-      var parameters = {};
-      // console.log(response.json.results[0].geometry.location);
-      parameters.location = response.json.results[0].geometry.location.lat + "," + response.json.results[0].geometry.location.lng;
-      parameters.key = process.env.MAPS_KEY;
-      parameters.rankby = rankby;
-      if(rankby == "prominence")
-        parameters.radius = process.env.SEARCH_RADIUS
+  }).asPromise()
+  .then(function(response){
+    var parameters = {};
+    parameters.location = response.json.results[0].geometry.location.lat + "," + response.json.results[0].geometry.location.lng;
+    parameters.key = process.env.MAPS_KEY;
+    parameters.rankby = rankby;
+    if(rankby == "prominence")
+      parameters.radius = process.env.SEARCH_RADIUS
 
-      parameters.keyword = keyword;
-      parameters.limit = process.env.LIMIT;
-      // console.log(parameters);
+    parameters.keyword = keyword;
+    parameters.limit = process.env.LIMIT;
 
-      poisearch.nearbysearch(parameters, process.env.FORMAT, function(statusCode, result) {
-        res.statusCode = statusCode;
-        res.send(result);
-      });
-    }
-  });
+    return parameters;
+   })
+   .then(function(parameters){
+     return poisearch.nearbysearch(parameters, process.env.FORMAT).asPromise()
+   })
+   .then(function(result){
+     console.log('ok')
+     res.statusCode = statusCode;
+     res.send(result);
+   })
+
 }
 
 exports.answer = function(req, res) {
