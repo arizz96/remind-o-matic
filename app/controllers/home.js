@@ -1,31 +1,48 @@
 var numeral = require('numeral');
 var dateFormat = require('dateformat');
-var User = require('./user')
+var User = require('../models/user')
 //var poisearch = require('placesearch');
 
 exports.welcome = function(req, res) {
-
-  // creo l'id
-  var remindOMaticId = 46;
-
-  res.cookie('remindOMaticId', remindOMaticId);
   // creo la entry nel DB
-  // create a new instance of the User model
   var user = new User();
-  // set the bears name (comes from the request)
-  user.remindOMaticId = remindOMaticId;
-  user.city = "Trento";
-  // save the bear and check for errors
+  user.timeStamp = Date.now();
   user.save(function (err) {
       if (err) { res.send(err); }
   });
 
+  // creo il remindOMaticId, e gli assegno l'_id dell'user appena creato
+  var remindOMaticId = user._id.toString();
+  res.cookie('remindOMaticId', remindOMaticId); // creo il cookie 'remindOMaticId'
+
+  res.json(user)
+
+  /*
   res.json({
     action: 'welcome',
     status: 200,
     body: req.__('welcome')
   });
+  */
+}
 
+
+exports.removeAllUsers = function(req, res) {
+  // rimuovo un determinato user
+  User.remove(function (err) {
+      if (err) { res.send(err); }
+  });
+
+  res.end();
+}
+
+exports.getAllUsers = function(req, res) {
+
+  // Ottieni tutti gli Users
+  User.find(function (err, user) {
+      if (err) { res.send(err); }
+      res.json(user);
+  });
 
 
 }
@@ -36,14 +53,27 @@ exports.ask = function(req, res) {
   };
 
   var cookies = parseCookies(req);
-  console.log(cookies['remindOMaticId'])
-  console.log(req.body.text);
-  var request = ai.textRequest(req.body.text, options);
+  var remindOMaticId = cookies['remindOMaticId'];
+  var timeStamp = Date.now();
+
+
+  User.findById(remindOMaticId, function (err, user) {
+    if (err) return handleError(err);
+
+    user.timeStamp = timeStamp;
+    user.save(function (err, updatedUser) {
+      if (err) return handleError(err);
+      res.json(updatedUser);
+    });
+  });
+
+  //console.log(req.body.text);
+  var request = ai.textRequest(req.body.text, {sessionId: '1'});
 
   request.on('response', function(response) {
-    console.log(response);
+    //console.log(response);
 
-    console.log(response.result.action);
+    //console.log(response.result.action);
     res.end(response.result.action);
   });
 
@@ -52,13 +82,8 @@ exports.ask = function(req, res) {
     res.end();
   });
 
-  // Get all the bears
-  User.find(function (err, user) {
-      if (err) { res.send(err); }
-      res.json(user);
-  });
-
   request.end();
+
 }
 
 function parseCookies (req) {

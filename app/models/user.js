@@ -4,9 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-    remindOMaticId: String,
-    city: String
-    
+    timeStamp: Number
 });
 
 module.exports = mongoose.model('User', UserSchema);
