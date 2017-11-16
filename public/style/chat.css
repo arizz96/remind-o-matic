@@ -23,28 +23,28 @@
   opacity: 0;
 }
 .messages .message.left .text_wrapper {
-  background-color: #C2C1A5;
+  background-color: var(--c3);
   margin-left: 20px;
 }
 .messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
   right: 100%;
-  border-right-color: #C2C1A5;
+  border-right-color: var(--c3);
 }
 .messages .message.left .text {
-  color: #596869;
+  color: var(--c5);
 }
 
 .messages .message.right .text_wrapper {
-  background-color: #F5F9E9;
+  background-color: var(--c2);
   margin-right: 20px;
   float: right;
 }
 .messages .message.right .text_wrapper::after, .messages .message.right .text_wrapper::before {
   left: 100%;
-  border-left-color: #F5F9E9;
+  border-left-color: var(--c2);
 }
 .messages .message.right .text {
-  color: #515751;
+  color: var(--c5);
 }
 .messages .message.appeared {
   opacity: 1;
@@ -80,51 +80,48 @@
   font-weight: 300;
 }
 
-.bottom_wrapper {
-  width: 100%;
-  background-color: #fff;
-  padding-right: 10px;
-  padding-left: 10px;
-  bottom: 0;
-}
-.bottom_wrapper .message_input_wrapper {
+.message_input_wrapper {
   display: inline-block;
-  height: 50px;
   border-radius: 25px;
-  border: 1px solid #bcbdc0;
+  height: 50%;
+  border: 1px solid var(--c1);
   width: calc(100% - 160px);
   position: relative;
   padding: 0 20px;
 }
-.bottom_wrapper .message_input_wrapper .message_input {
+
+.message_input_wrapper .message_input {
   border: none;
   height: 100%;
   box-sizing: border-box;
   width: calc(100% - 40px);
   position: absolute;
   outline-width: 0;
-  color: gray;
+  color: var(--c1);
+  background-color: var(--c5);
 }
-.bottom_wrapper .send_message {
+
+.send_message {
   width: 140px;
-  height: 50px;
+  height: 50%;
   display: inline-block;
   border-radius: 50px;
-  background-color: #a3d063;
-  border: 2px solid #a3d063;
-  color: #fff;
+  border: 2px solid var(--c1);
+  color: var(--c5);
+  background-color: var(--c1);
   cursor: pointer;
   transition: all 0.2s linear;
   text-align: center;
   float: right;
 }
-.bottom_wrapper .send_message:hover {
-  color: #a3d063;
-  background-color: #fff;
+
+.send_message:hover {
+  color: var(--c1);
+  background-color: var(--c5);
 }
-.bottom_wrapper .send_message .text {
-  font-size: 18px;
-  font-weight: 300;
+
+.send_message .text {
+  font-size: 100%;
   display: inline-block;
   line-height: 48px;
 }

@@ -1,5 +1,10 @@
 html{
-  height: 100%
+  height: 100%;
+  --c1: #112236;
+  --c2: #436280;
+  --c3: #A3BAD2;
+  --c4: #DBE4ED;
+  --c5: #F7F7F7;
 }
 
 body {
@@ -36,10 +41,15 @@ body {
 }
 
 .my-footer{
+  height: 10%;
   position: fixed;
   bottom: 0;
   left: 0;
   right:0;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  bottom: 0;
   overflow: auto
 }
 
@@ -54,41 +64,42 @@ body {
   width: -moz-available; /*Firefox*/
 }
 
-.color1{
-  color: #36453B
-}
-.color2{
-  color: #596869
-}
-.color3{
-  color: #515751
-}
-.color4{
-  color: #F5F9E9
-}
-.color5{
-  color: #C2C1A5
-}
-
-.back-color1{
-  background-color: #36453B
-}
-.back-color2{
-  background-color: #596869
-}
-.back-color3{
-  background-color: #515751
-}
-.back-color4{
-  background-color: #F5F9E9
-}
-.back-color5{
-  background-color: #C2C1A5
-}
-
-.middle-column
-{
+.middle-column{
     float: none;
     display: table-cell;
     vertical-align: middle;
+}
+
+
+/*PALETTE*/
+.color1{
+  color: var(--c1);
+}
+.color2{
+  color: var(--c2);
+}
+.color3{
+  color: var(--c3);
+}
+.color4{
+  color: var(--c4);
+}
+.color5{
+  color: var(--c5);
+}
+
+.back-color1{
+  background-color: var(--c1);
+}
+.back-color2{
+  background-color: var(--c2);
+}
+.back-color3{
+  background-color: var(--c3);
+}
+.back-color4{
+  background-color: var(--c4);
+}
+.back-color5{
+  background-color: var(--c5);
 }
