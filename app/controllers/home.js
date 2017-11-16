@@ -62,11 +62,11 @@ exports.place = function(req, res) {
     return parameters;
    })
    .then(function(parameters){
-     return poisearch.nearbysearch(parameters, process.env.FORMAT).asPromise()
+     return poisearch.nearbysearch(parameters, process.env.FORMAT)
    })
    .then(function(result){
      console.log('ok')
-     res.statusCode = statusCode;
+     console.log(result)
      res.send(result);
    })
 
