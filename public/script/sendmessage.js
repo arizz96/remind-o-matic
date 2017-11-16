@@ -43,11 +43,14 @@ async function readRequest(){
   // writeMessage('response', 'left');
   // alert("stampato response");
   message_input = document.getElementsByClassName("message_input")[0];
-  if(message_input != ""){
+  if(message_input.value != ''){
+    document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
+    console.log(message_input.value);
     writeMessage(message_input.value, 'right');
-    message_input.value = "";
+    message_input.value = '';
     await sleep(1000);
     writeMessage('response', 'left');
+    document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
 }
 

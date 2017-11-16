@@ -23,28 +23,28 @@
   opacity: 0;
 }
 .messages .message.left .text_wrapper {
-  background-color: #ffe6cb;
+  background-color: #C2C1A5;
   margin-left: 20px;
 }
 .messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
   right: 100%;
-  border-right-color: #ffe6cb;
+  border-right-color: #C2C1A5;
 }
 .messages .message.left .text {
-  color: #c48843;
+  color: #596869;
 }
 
 .messages .message.right .text_wrapper {
-  background-color: #c7eafc;
+  background-color: #F5F9E9;
   margin-right: 20px;
   float: right;
 }
 .messages .message.right .text_wrapper::after, .messages .message.right .text_wrapper::before {
   left: 100%;
-  border-left-color: #c7eafc;
+  border-left-color: #F5F9E9;
 }
 .messages .message.right .text {
-  color: #45829b;
+  color: #515751;
 }
 .messages .message.appeared {
   opacity: 1;
