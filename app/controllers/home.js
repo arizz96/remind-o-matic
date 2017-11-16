@@ -1,6 +1,7 @@
 var numeral = require('numeral');
 var dateFormat = require('dateformat');
-var User = require('../models/user')
+var User = require('../models/user');
+var Item= require('../models/item')
 //var poisearch = require('placesearch');
 
 exports.welcome = function(req, res) {
@@ -15,15 +16,13 @@ exports.welcome = function(req, res) {
   var remindOMaticId = user._id.toString();
   res.cookie('remindOMaticId', remindOMaticId); // creo il cookie 'remindOMaticId'
 
-  res.json(user)
 
-  /*
   res.json({
     action: 'welcome',
     status: 200,
     body: req.__('welcome')
   });
-  */
+
 }
 
 
@@ -36,16 +35,15 @@ exports.removeAllUsers = function(req, res) {
   res.end();
 }
 
-exports.getAllUsers = function(req, res) {
 
+exports.getAllUsers = function(req, res) {
   // Ottieni tutti gli Users
   User.find(function (err, user) {
       if (err) { res.send(err); }
       res.json(user);
   });
-
-
 }
+
 
 exports.ask = function(req, res) {
   var options = {
@@ -62,19 +60,46 @@ exports.ask = function(req, res) {
 
     user.timeStamp = timeStamp;
     user.save(function (err, updatedUser) {
-      if (err) return handleError(err);
-      res.json(updatedUser);
+      if (err) res.send(err);
     });
   });
 
   //console.log(req.body.text);
-  var request = ai.textRequest(req.body.text, {sessionId: '1'});
+  var request = ai.textRequest(req.body.text, options);
 
   request.on('response', function(response) {
-    //console.log(response);
+    console.log(response);
+
+    var action = response.result.action
+    var parameters = response.result.parameters
+
+    Item.findOne({remindOMaticId: remindOMaticId, action:action}, function (err, it) {
+
+      if(it == null){ // se non esiste un item così, ne creo uno nuovo
+
+        // creo la entry nel DB
+        var item = new Item();
+        item.remindOMaticId = remindOMaticId;
+        item.action = action;
+        item.parameters = parameters
+        item.timeStamp = timeStamp;
+        item.confirmed = false;
+        item.save(function (err) {
+            if (err) { res.send(err); }
+            res.json(item)
+        });
+      }
+      else{
+        res.json("Item già presente")
+      }
+
+    });
+    // se lo trovo, e non è confermato  -> sovrascrivo
+    // se lo trovo, ed è confermato     ->
+    // se non lo trovo                  ->
 
     //console.log(response.result.action);
-    res.end(response.result.action);
+    //res.end(response.result.action);
   });
 
   request.on('error', function(error) {
@@ -83,7 +108,6 @@ exports.ask = function(req, res) {
   });
 
   request.end();
-
 }
 
 function parseCookies (req) {
