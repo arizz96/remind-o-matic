@@ -80,49 +80,38 @@
   font-weight: 300;
 }
 
+/*FOOOOOTER*/
+
 .message_input_wrapper {
-  display: inline-block;
   border-radius: 25px;
   height: 50%;
   border: 1px solid var(--c1);
-  width: calc(100% - 160px);
-  position: relative;
   padding: 0 20px;
 }
-
 .message_input_wrapper .message_input {
   border: none;
   height: 100%;
-  box-sizing: border-box;
-  width: calc(100% - 40px);
-  position: absolute;
   outline-width: 0;
+  width: inherit;
   color: var(--c1);
   background-color: var(--c5);
 }
-
 .send_message {
-  width: 140px;
-  height: 50%;
-  display: inline-block;
-  border-radius: 50px;
-  border: 2px solid var(--c1);
   color: var(--c5);
   background-color: var(--c1);
+  height: 50%;
+  border-radius: 50px;
+  border: 2px solid var(--c1);
   cursor: pointer;
   transition: all 0.2s linear;
   text-align: center;
-  float: right;
 }
-
 .send_message:hover {
   color: var(--c1);
   background-color: var(--c5);
 }
-
 .send_message .text {
   font-size: 100%;
-  display: inline-block;
   line-height: 48px;
 }
 

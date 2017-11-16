@@ -20,8 +20,9 @@ body {
 }
 
 #h-title{
-  /*font-size : 1.5em;*/
-  font-size : 3.5vh;
+  font-size : 4vh;
+  color: var(--c4);
+  vertical-align: middle;
 }
 
 .h-button{
@@ -33,6 +34,7 @@ body {
 }
 
 .my-header{
+  background-color: var(--c1);
   height: 10%;
   min-height: 10%;
   margin-right: 0px;
@@ -40,21 +42,9 @@ body {
   padding: 15px
 }
 
-.my-footer{
-  height: 10%;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right:0;
-  width: 100%;
-  padding-right: 10px;
-  padding-left: 10px;
-  bottom: 0;
-  overflow: auto
-}
-
 .chat-container{
-  min-height:80%;
+  background-color: var(--c4);
+  min-height:82%;
   position:fixed;
   top:10%;
   bottom:10%;
@@ -64,42 +54,18 @@ body {
   width: -moz-available; /*Firefox*/
 }
 
+.my-footer{
+  background-color: var(--c5);
+  height: 8%;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  bottom: 0;
+}
+
 .middle-column{
     float: none;
     display: table-cell;
     vertical-align: middle;
-}
-
-
-/*PALETTE*/
-.color1{
-  color: var(--c1);
-}
-.color2{
-  color: var(--c2);
-}
-.color3{
-  color: var(--c3);
-}
-.color4{
-  color: var(--c4);
-}
-.color5{
-  color: var(--c5);
-}
-
-.back-color1{
-  background-color: var(--c1);
-}
-.back-color2{
-  background-color: var(--c2);
-}
-.back-color3{
-  background-color: var(--c3);
-}
-.back-color4{
-  background-color: var(--c4);
-}
-.back-color5{
-  background-color: var(--c5);
 }
