@@ -39,7 +39,8 @@
     "passport": "latest",
     "passport-local": "latest",
     "pm2": "^2.7.2",
-    "request": "latest",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
     "serve-favicon": "~2.3.0",
     "simple-encryptor": "latest",
     "underscore": "latest"
