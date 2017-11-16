@@ -18,9 +18,9 @@ Message = function (arg) {
 function writeMessage (text, side) {
   // alert("writing message " + text);
   var $messages, message;
-  if (text.trim() === '') {
-      return;
-  }
+  // if (text.trim() === '') {
+  //     return;
+  // }
   //$('.message_input').val('');
   $messages = $('.messages');
   message_side = side;
@@ -34,11 +34,7 @@ function writeMessage (text, side) {
   // return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function readRequest(){
+function readRequest(){
   // alert("inizio read");
   // writeMessage('response', 'left');
   // alert("stampato response");
@@ -47,9 +43,23 @@ async function readRequest(){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
     console.log(message_input.value);
     writeMessage(message_input.value, 'right');
+    var info = { "text" : message_input.value };
+    console.log(info);
+
+    $.ajax({
+      type: 'POST',
+      url: 'api/v1/ask',
+      acceptedLanguage: 'it',
+      contentType: 'application/json',
+      data: JSON.stringify(info),
+      success: function (data) {
+          // use data
+          console.log(data);
+          writeMessage(data.body, 'left');
+        }
+    });
     message_input.value = '';
-    await sleep(1000);
-    writeMessage('response', 'left');
+
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
 }
