@@ -49,11 +49,12 @@ body {
   top:10%;
   bottom:10%;
   overflow-y: scroll;
-  width: -webkit-fill-available
+  width: 100%;
+  width: -webkit-fill-available; /*Chrome*/
+  width: -moz-available; /*Firefox*/
 }
 
 .color1{
-  background-color: #36453B;
   color: #36453B
 }
 .color2{
@@ -67,6 +68,22 @@ body {
 }
 .color5{
   color: #C2C1A5
+}
+
+.back-color1{
+  background-color: #36453B
+}
+.back-color2{
+  background-color: #596869
+}
+.back-color3{
+  background-color: #515751
+}
+.back-color4{
+  background-color: #F5F9E9
+}
+.back-color5{
+  background-color: #C2C1A5
 }
 
 .middle-column
