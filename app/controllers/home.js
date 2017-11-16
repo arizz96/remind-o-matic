@@ -35,12 +35,41 @@ exports.removeAllUsers = function(req, res) {
   res.end();
 }
 
+exports.removeAllItems = function(req, res) {
+  // rimuovo un determinato user
+  Item.remove(function (err) {
+      if (err) { res.send(err); }
+  });
+
+  res.end();
+}
 
 exports.getAllUsers = function(req, res) {
   // Ottieni tutti gli Users
-  User.find(function (err, user) {
+  User.find(function (err, users) {
       if (err) { res.send(err); }
-      res.json(user);
+      res.json(users);
+  });
+}
+
+
+exports.getAllItems = function(req, res) {
+  // Ottieni tutti gli Users
+  Item.find(function (err, items) {
+      if (err) { res.send(err); }
+      res.json(items);
+  });
+}
+
+
+exports.getAllItemsByUser = function(req, res) {
+  var cookies = parseCookies(req);
+  var remindOMaticId = cookies['remindOMaticId'];
+
+  // Ottieni tutti gli items dell'user
+  Item.find({ remindOMaticId: remindOMaticId}, function (err, items) {
+      if (err) { res.send(err); }
+      res.json(items);
   });
 }
 
@@ -73,9 +102,9 @@ exports.ask = function(req, res) {
     var action = response.result.action
     var parameters = response.result.parameters
 
-    Item.findOne({remindOMaticId: remindOMaticId, action:action}, function (err, it) {
+    Item.findOne({remindOMaticId: remindOMaticId, action: action}, function (err, it) {
 
-      if(it == null){ // se non esiste un item così, ne creo uno nuovo
+      if(it == null && action != "input.unknown"){ // se non esiste un item così, E se è qualcosa che DialogFlow è riuscito a capire, ne creo uno nuovo
 
         // creo la entry nel DB
         var item = new Item();
@@ -94,12 +123,6 @@ exports.ask = function(req, res) {
       }
 
     });
-    // se lo trovo, e non è confermato  -> sovrascrivo
-    // se lo trovo, ed è confermato     ->
-    // se non lo trovo                  ->
-
-    //console.log(response.result.action);
-    //res.end(response.result.action);
   });
 
   request.on('error', function(error) {
