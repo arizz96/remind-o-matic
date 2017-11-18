@@ -54,22 +54,31 @@ exports.place = function(req, res) {
     parameters.key = process.env.MAPS_KEY;
     parameters.rankby = rankby;
     if(rankby == "prominence")
-      parameters.radius = process.env.SEARCH_RADIUS
-
+      parameters.radius = process.env.SEARCH_RADIUS;
     parameters.keyword = keyword;
-    parameters.limit = process.env.LIMIT;
-
     return parameters;
-   })
-   .then(function(parameters){
-     return poisearch.nearbysearch(parameters, process.env.FORMAT)
-   })
-   .then(function(result){
-     console.log('ok')
-     console.log(result)
-     res.send(result);
-   })
-
+  })
+  .then(function(parameters){
+    return poisearch.nearbysearch(parameters, process.env.FORMAT);
+  })
+  .then(function(response){
+    console.log('ok');
+    // console.log(JSON.parse(response).results[0]);
+    jsonResponse = JSON.parse(response);
+    parsedResult = {
+      result_type: process.env.NEAR_PLACE,
+      values: []
+    };
+    for(i = 0; i < process.env.LIMIT; i++)
+      parsedResult.values.push({
+        lat:     jsonResponse.results[i].geometry.location.lat,
+        lng:     jsonResponse.results[i].geometry.location.lng,
+        icon:    jsonResponse.results[i].icon,
+        name:    jsonResponse.results[i].name,
+        address: jsonResponse.results[i].vicinity
+      });
+    res.send(parsedResult);
+  });
 }
 
 exports.answer = function(req, res) {
