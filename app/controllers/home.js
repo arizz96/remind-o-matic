@@ -28,6 +28,11 @@ exports.ask = function(req, res) {
     action = response.result.action;
     action = action.substring(action.lastIndexOf('.') + 1);
 
+    // extract only 'region'
+    match = action.replace(/^(region).+/, '$1');
+    if(match)
+      action = match;
+
     customResponse = responses.handleAction(action, response.result.parameters, req);
 
     res.json(customResponse);

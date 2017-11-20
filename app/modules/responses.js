@@ -6,6 +6,11 @@ exports.handleAction = function handleAction(action, parameters, req) {
     case 'dateTime':
     case 'date':
     case 'time': data = _dateTime(parameters, req); break;
+
+    case 'city':
+    case 'country':
+    case 'region':
+    case 'place': data = _place(parameters, req); break;
   }
 
   return data;
@@ -20,9 +25,6 @@ _welcome = function _welcome(req) {
 };
 
 _dateTime = function _dateTime(parameters, req) {
-  console.log(parameters.time)
-  console.log(parameters.date)
-
   if(parameters.time && parameters.date)
     body = req.__('got_datetime', { date: parameters.date, time: parameters.time })
   else if(parameters.date)
@@ -36,3 +38,28 @@ _dateTime = function _dateTime(parameters, req) {
     body: body
   }
 };
+
+_place = function _place(parameters, req) {
+console.log(parameters)
+  Object.keys(parameters).forEach(function(key) {
+    match = action.replace(/^(geo-)(state).+/, '$2');
+    if(match)
+      parameters['state'] = parameters[key];
+  });
+  console.log(parameters)
+
+  if(parameters['geo-city'])
+    body = req.__('got_city', { city: parameters['geo-city'] })
+  else if(parameters['geo-country'])
+    body = req.__('got_country', { country: parameters['geo-country'] })
+  else if(parameters.state)
+    body = req.__('got_country', { country: parameters.state })
+  else if(parameters.place)
+    body = req.__('got_place', { place: parameters.place })
+
+  return {
+    action: 'place',
+    status: 200,
+    body: body
+  }
+}
