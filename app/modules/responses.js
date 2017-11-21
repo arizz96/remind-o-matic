@@ -10,6 +10,7 @@ exports.handleAction = function handleAction(action, parameters, req) {
     case 'city':
     case 'country':
     case 'region':
+    case 'cityPlace':
     case 'place': data = _place(parameters, req); break;
     case 'unknown': data = _unknown(req); break;
   }
@@ -49,22 +50,10 @@ _dateTime = function _dateTime(parameters, req) {
 };
 
 _place = function _place(parameters, req) {
-console.log(parameters)
-  Object.keys(parameters).forEach(function(key) {
-    match = action.replace(/^(geo-)(state).+/, '$2');
-    if(match)
-      parameters['state'] = parameters[key];
-  });
-  console.log(parameters)
-
-  if(parameters['geo-city'])
-    body = req.__('got_city', { city: parameters['geo-city'] })
-  else if(parameters['geo-country'])
-    body = req.__('got_country', { country: parameters['geo-country'] })
-  else if(parameters.state)
-    body = req.__('got_country', { country: parameters.state })
-  else if(parameters.place)
-    body = req.__('got_place', { place: parameters.place })
+  if(parameters.geo_place)
+    body = req.__('got_place', { place: parameters.geo_place })
+  else if(parameters.geo_poi)
+    body = req.__('got_poi', { poi: parameters.geo_poi })
 
   return {
     action: 'place',

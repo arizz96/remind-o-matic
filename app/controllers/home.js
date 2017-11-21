@@ -16,26 +16,35 @@ exports.ask = function(req, res) {
     sessionId: '123456789'
   };
 
-  console.log(req.body.text);
   var request = ai.textRequest(req.body.text, options);
 
   request.on('response', function(response) {
-    console.log(response);
+    Promise.resolve()
+    .then(function() {
+      keyword  = response.result.parameters.geo_poi;
+      rankby   = req.query.rankby || 'distance';
+      location = response.result.parameters.geo_place;
 
-    console.log(response.result.action);
-    // res.end(response.result.action);
+      if(keyword && rankby && location)
+        return poisearch.search(keyword, location, rankby);
+      else
+        return [];
+    })
+    .then(function(result){
+      return result;
+    })
+    .then(function(nearbyResults) {
+      action = response.result.action;
+      action = action.substring(action.lastIndexOf('.') + 1);
 
-    action = response.result.action;
-    action = action.substring(action.lastIndexOf('.') + 1);
-
-    // extract only 'region'
-    match = action.replace(/^(region).+/, '$1');
-    if(match)
-      action = match;
-
-    customResponse = responses.handleAction(action, response.result.parameters, req);
-
-    res.json(customResponse);
+      customResponse = responses.handleAction(action, response.result.parameters, req);
+      customResponse['nearbyResults'] = nearbyResults;
+      return customResponse;
+    })
+    .then(function(customResponse) {
+      res.json(customResponse);
+      res.end();
+    });
   });
 
   request.on('error', function(error) {
@@ -44,46 +53,6 @@ exports.ask = function(req, res) {
   });
 
   request.end();
-}
-
-exports.place = function(req, res) {
-  const keyword = req.query.keyword;
-  const rankby = req.query.rankby;
-
-  maps.geocode({
-    address: req.query.location
-  }).asPromise()
-  .then(function(response){
-    var parameters = {};
-    parameters.location = response.json.results[0].geometry.location.lat + "," + response.json.results[0].geometry.location.lng;
-    parameters.key = process.env.MAPS_KEY;
-    parameters.rankby = rankby;
-    if(rankby == "prominence")
-      parameters.radius = process.env.SEARCH_RADIUS;
-    parameters.keyword = keyword;
-    return parameters;
-  })
-  .then(function(parameters){
-    return poisearch.nearbysearch(parameters, process.env.FORMAT);
-  })
-  .then(function(response){
-    console.log('ok');
-    // console.log(JSON.parse(response).results[0]);
-    jsonResponse = JSON.parse(response);
-    parsedResult = {
-      result_type: process.env.NEAR_PLACE,
-      values: []
-    };
-    for(i = 0; i < process.env.LIMIT; i++)
-      parsedResult.values.push({
-        lat:     jsonResponse.results[i].geometry.location.lat,
-        lng:     jsonResponse.results[i].geometry.location.lng,
-        icon:    jsonResponse.results[i].icon,
-        name:    jsonResponse.results[i].name,
-        address: jsonResponse.results[i].vicinity
-      });
-    res.send(parsedResult);
-  });
 }
 
 exports.answer = function(req, res) {
