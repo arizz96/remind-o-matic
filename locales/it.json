@@ -3,10 +3,9 @@
   "got_datetime": "Quindi era il {{date}} verso le {{time}}, vero?",
   "got_time":     "Quindi era verso le {{time}}, vero?",
   "got_date":     "Quindi era il {{date}}, vero?",
-  "got_city":     "Ho trovato {{city}} (città). Eri li?",
-  "got_country":  "Dunque eri in {{country}}?",
+  "got_place":    "{{place}} è il posto in cui ti trovavi?",
   "knowledge":    "Mmmm... non importa, passiamo oltre.",
   "got_no":       "No? Mmh... riesci ad essere un po più specifico?",
   "got_yes":      "Capito.",
-  "got_place":    "Quindi ti trovavi vicino a un {{place}}?"
+  "got_poi":      "Quindi ti trovavi vicino a un {{poi}}?"
 }
