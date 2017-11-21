@@ -44,7 +44,7 @@ function readRequest(){
     console.log(message_input.value);
     writeMessage(message_input.value, 'right');
     var info = { "text" : message_input.value };
-    console.log(info);
+    // console.log(info);
 
     $.ajax({
       type: 'POST',
@@ -54,8 +54,23 @@ function readRequest(){
       data: JSON.stringify(info),
       success: function (data) {
           // use data
-          console.log(data);
-          writeMessage(data.body, 'left');
+          console.log(data.action);
+          switch(data.action){
+            case 'place':
+              // console.log(data.nearbyResults);
+              var tmp = '';
+              if(data.nearbyResults.length > 0){
+                tmp = 'Abbiamo trovato: <br \>';
+                for(i = 0; i < data.nearbyResults.length; i++)
+                  tmp += ' - <b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' <br \>';
+                tmp += 'Potrebbe essere uno di questi?';
+                writeMessage(tmp, 'left');
+              } else {
+                writeMessage(data.body, 'left');
+              }; break;
+              default: writeMessage(data.body, 'left');
+          }
+
         }
     });
     message_input.value = '';
