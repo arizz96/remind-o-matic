@@ -11,6 +11,7 @@ exports.handleAction = function handleAction(action, parameters, req) {
     case 'country':
     case 'region':
     case 'place': data = _place(parameters, req); break;
+    case 'unknown': data = _unknown(req); break;
   }
 
   return data;
@@ -21,6 +22,14 @@ _welcome = function _welcome(req) {
     action: 'welcome',
     status: 200,
     body: req.__('welcome')
+  }
+};
+
+_unknown = function _unknown(req) {
+  return {
+    action: 'unknown',
+    status: 200,
+    body: req.__('unknown')
   }
 };
 

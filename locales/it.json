@@ -8,5 +8,6 @@
   "knowledge":    "Mmmm... non importa, passiamo oltre.",
   "got_no":       "No? Mmh... riesci ad essere un po più specifico?",
   "got_yes":      "Capito.",
-  "got_place":    "Quindi ti trovavi vicino a un {{place}}?"
+  "got_place":    "Quindi ti trovavi vicino a un {{place}}?",
+  "unknown":      "Scusa ma non ho capito bene. Potresti ripetere?"
 }
