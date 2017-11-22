@@ -84,10 +84,12 @@
 
 .message_input_wrapper {
   border-radius: 25px;
-  height: 50%;
+  height: 70%;
   border: 1px solid var(--c1);
-  padding: 0 20px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
+
 .message_input_wrapper .message_input {
   border: none;
   height: 100%;
@@ -96,23 +98,28 @@
   color: var(--c1);
   background-color: var(--c5);
 }
+
 .send_message {
   color: var(--c5);
   background-color: var(--c1);
-  height: 50%;
+  height: 70%;
   border-radius: 50px;
   border: 2px solid var(--c1);
   cursor: pointer;
-  transition: all 0.2s linear;
+  transition: all 0.5s linear;
   text-align: center;
+  margin-top: auto;
+  margin-bottom: auto;
 }
+
 .send_message:hover {
   color: var(--c1);
   background-color: var(--c5);
 }
+
 .send_message .text {
-  font-size: 100%;
-  line-height: 48px;
+  /*font-size: 100%;*/
+  /*line-height: 48px;*/
 }
 
 .message_template {

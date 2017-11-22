@@ -26,11 +26,21 @@ body {
 }
 
 .h-button{
+  font-weight: bold;
   display: table;
-  margin-left: auto
+  margin-left: auto;
+  border: 2px solid var(--c2);
+  background-color: var(--c2);
+  color: var(--c4);
+  transition: all 0.5s;
 /*  width: 10%;
   margin-right: 45%;
   margin-left: 45%;*/
+}
+
+.h-button:hover{
+  background-color: var(--c3);
+  color: var(--c2);
 }
 
 .my-header{
@@ -61,6 +71,8 @@ body {
   width: 100%;
   padding-right: 10px;
   padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
   bottom: 0;
 }
 
