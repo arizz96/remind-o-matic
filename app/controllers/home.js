@@ -4,18 +4,70 @@ var User = require('../models/user');
 var Item= require('../models/item')
 //var poisearch = require('placesearch');
 
+
+/**************************** COOKIE ERASER ****************************/
+
+var interval = 10000//60000; // in ms = 1 min
+var maxCookieTime = 600000 // in ms = 10 min
+
+function cookieEraser() {
+  var timeStamp = Date.now();
+
+  // Ottengo e stampo tutti gli Users su console (debug)
+  console.log("prima:")
+  User.find(function (err, users) {
+    if (err) { res.send(err); }
+    console.log(users);
+  });
+  console.log("");
+
+  User.find(function (err, users) {
+    if (err) { res.send(err); }
+
+    // scorro gli utenti, e rimuovo quelli con timeStamp più basso, insieme ai rispettivi item
+    for (index in users) {
+      user = users[index]
+
+      if(timeStamp - user.timeStamp >= maxCookieTime) // se il cookie ha superato il suo massimo tempo di vita, lo cancello
+        User.remove({ _id: user }, function(err){
+          if (err) { res.send(err); }
+        });
+        Item.remove({ remindOMaticId: remindOMaticId }, function(err){
+          if (err) { res.send(err); }
+        });
+    }
+  });
+
+  // Ottengo e stampo tutti gli Users su console (debug)
+  console.log("dopo:")
+  User.find(function (err, users) {
+    if (err) { res.send(err); }
+    console.log(users);
+  });
+
+}
+
+setInterval(cookieEraser, interval); // controllo ogni 1 minuti se ci sono cookie da cancellare
+
+/***********************************************************************/
+
+
+
+
+
 exports.welcome = function(req, res) {
   // creo la entry nel DB
   var user = new User();
-  user.timeStamp = Date.now();
+  var timeStamp = Date.now();
+
+  user.timeStamp = timeStamp;
   user.save(function (err) {
-      if (err) { res.send(err); }
+    if (err) { res.send(err); }
   });
 
   // creo il remindOMaticId, e gli assegno l'_id dell'user appena creato
   var remindOMaticId = user._id.toString();
   res.cookie('remindOMaticId', remindOMaticId); // creo il cookie 'remindOMaticId'
-
 
   res.json({
     action: 'welcome',
@@ -29,7 +81,7 @@ exports.welcome = function(req, res) {
 exports.removeAllUsers = function(req, res) {
   // rimuovo un determinato user
   User.remove(function (err) {
-      if (err) { res.send(err); }
+    if (err) { res.send(err); }
   });
 
   res.end();
@@ -38,7 +90,7 @@ exports.removeAllUsers = function(req, res) {
 exports.removeAllItems = function(req, res) {
   // rimuovo un determinato user
   Item.remove(function (err) {
-      if (err) { res.send(err); }
+    if (err) { res.send(err); }
   });
 
   res.end();
@@ -47,8 +99,8 @@ exports.removeAllItems = function(req, res) {
 exports.getAllUsers = function(req, res) {
   // Ottieni tutti gli Users
   User.find(function (err, users) {
-      if (err) { res.send(err); }
-      res.json(users);
+    if (err) { res.send(err); }
+    res.json(users);
   });
 }
 
@@ -56,8 +108,8 @@ exports.getAllUsers = function(req, res) {
 exports.getAllItems = function(req, res) {
   // Ottieni tutti gli Users
   Item.find(function (err, items) {
-      if (err) { res.send(err); }
-      res.json(items);
+    if (err) { res.send(err); }
+    res.json(items);
   });
 }
 
@@ -68,8 +120,8 @@ exports.getAllItemsByUser = function(req, res) {
 
   // Ottieni tutti gli items dell'user
   Item.find({ remindOMaticId: remindOMaticId}, function (err, items) {
-      if (err) { res.send(err); }
-      res.json(items);
+    if (err) { res.send(err); }
+    res.json(items);
   });
 }
 
@@ -135,11 +187,11 @@ exports.ask = function(req, res) {
 
 function parseCookies (req) {
     var list = {},
-        rc = req.headers.cookie;
+      rc = req.headers.cookie;
 
     rc && rc.split(';').forEach(function( cookie ) {
-        var parts = cookie.split('=');
-        list[parts.shift().trim()] = decodeURI(parts.join('='));
+      var parts = cookie.split('=');
+      list[parts.shift().trim()] = decodeURI(parts.join('='));
     });
 
     return list;
