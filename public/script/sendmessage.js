@@ -60,9 +60,9 @@ function readRequest(){
               // console.log(data.nearbyResults);
               var tmp = '';
               if(data.nearbyResults.length > 0){
-                tmp = 'Abbiamo trovato: <br \>';
+                tmp = 'Abbiamo trovato: <br />';
                 for(i = 0; i < data.nearbyResults.length; i++)
-                  tmp += ' - <b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' <br \>';
+                  tmp += ' - <b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' <br />';
                 tmp += 'Potrebbe essere uno di questi?';
                 writeMessage(tmp, 'left');
               } else {
