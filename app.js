@@ -4,7 +4,7 @@ var expressSession = require('express-session');
 
 var app = express();
 var dotenv = require('dotenv').config();
-var i18n = require("i18n");
+var i18n = require('i18n');
 var multer = require('multer')
 var constants = require('constants');
 var constant = require('./config/constants');
@@ -13,7 +13,8 @@ global.ai = apiai(process.env.DIALOGFLOW_DEV_KEY);
 
 var googleMaps = require('@google/maps');
 global.maps = googleMaps.createClient({
-  key: process.env.MAPS_KEY
+  key: process.env.MAPS_KEY,
+  Promise: Promise
 });
 
 var port = process.env.PORT || 8042;
@@ -35,8 +36,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 // I18n config
 i18n.configure({
-    locales:['it', 'en'],
-    directory: __dirname + '/locales'
+    defaultLocale: 'it',
+    directory: './locales'
 });
 app.use(i18n.init);
 

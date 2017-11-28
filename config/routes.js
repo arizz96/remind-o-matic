@@ -14,8 +14,6 @@ module.exports = function (app, passport) {
   v1.get('/getAllItems', home.getAllItems);
   v1.get('/getAllItemsByUser', home.getAllItemsByUser);
 
-  //v1.get('/place', home.place);
-  //v1.get('/nearby', home.nearby);
 
   app.use('/api/v1', v1);
   app.use('/', v1); // Set the default version to latest.

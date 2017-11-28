@@ -2,8 +2,8 @@ var numeral = require('numeral');
 var dateFormat = require('dateformat');
 var User = require('../models/user');
 var Item= require('../models/item')
-//var poisearch = require('placesearch');
-
+var responses = require('../modules/responses');
+var poisearch = require('../modules/placesearch');
 
 /**************************** COOKIE ERASER ****************************/
 /*
@@ -69,7 +69,6 @@ exports.welcome = function(req, res) {
   // creo il remindOMaticId, e gli assegno l'_id dell'user appena creato
   var remindOMaticId = user._id.toString();
   res.cookie('remindOMaticId', remindOMaticId); // creo il cookie 'remindOMaticId'
-
   res.json({
     action: 'welcome',
     status: 200,
@@ -175,6 +174,34 @@ exports.ask = function(req, res) {
         res.json("Item già presente")
       }
 
+  var request = ai.textRequest(req.body.text, options);
+
+  request.on('response', function(response) {
+    Promise.resolve()
+    .then(function() {
+      keyword  = response.result.parameters.geo_poi;
+      rankby   = req.query.rankby || 'distance';
+      location = response.result.parameters.geo_place;
+
+      if(keyword && rankby && location)
+        return poisearch.search(keyword, location, rankby);
+      else
+        return [];
+    })
+    .then(function(result){
+      return result;
+    })
+    .then(function(nearbyResults) {
+      action = response.result.action;
+      action = action.substring(action.lastIndexOf('.') + 1);
+
+      customResponse = responses.handleAction(action, response.result.parameters, req);
+      customResponse['nearbyResults'] = nearbyResults;
+      return customResponse;
+    })
+    .then(function(customResponse) {
+      res.json(customResponse);
+      res.end();
     });
   });
 
@@ -197,38 +224,6 @@ function parseCookies (req) {
 
     return list;
 }
-
-/*exports.place = function(req, res) {
-  var jsonGeocode;
-  // get place coordinates
-  maps.geocode({
-    address: '1600 Amphitheatre Parkway, Mountain View, CA'
-  }, function(err, response) {
-    if (!err) {
-      console.log(response.json.results);
-      jsonGeocode = response.json.results;
-    }
-  });
-
-  console.log(jsonGeocode);
-
-  // get attraction near the founded place
-  var parameters = {
-    location : '45.6448315,11.3024802',
-    key : process.env.MAPS_KEY,
-    rankby : 'distance',
-    keyword : 'pizzeria'
-  };
-
-  poisearch.nearbysearch(parameters, process.env.FORMAT, function(statusCode, result) {
-    // I could work with the result html/json here.  I could also just return it
-    // console.log("onResult: (" + statusCode + ")" + JSON.stringify(result));
-    res.statusCode = statusCode;
-    res.send(result);
-  });
-
-}
-*/
 
 exports.answer = function(req, res) {
   res.redirect('/home');

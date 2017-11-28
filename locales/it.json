@@ -1,8 +1,12 @@
 {
-  "welcome":      "Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un evento di cui non ricordi i particolari.
-                  In ogni momento puoi scrivere /help o cliccare il tasto a fianco della chat e ti manderò le istruzioni.
-                  Se vuoi ricordarti i dettagli di un evento particolare prova a dirmi quello che ti viene in mente di quel giorno.",
-  "got_datetime": "Quindi è successo il {{date}} verso le {{time}}, vero?",
-  "got_time":     "Quindi è successo verso le {{time}}, vero?",
-  "got_date":     "Quindi è successo il {{date}}, vero?"
+  "welcome":      "Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un evento di cui non ricordi i particolari. In ogni momento puoi scrivere /help o cliccare il tasto a fianco della chat e ti manderò le istruzioni. Se vuoi ricordarti i dettagli di un evento particolare prova a dirmi quello che ti viene in mente di quel giorno.",
+  "got_datetime": "Quindi era il {{date}} verso le {{time}}, vero?",
+  "got_time":     "Quindi era verso le {{time}}, vero?",
+  "got_date":     "Quindi era il {{date}}, vero?",
+  "got_place":    "{{place}} è il posto in cui ti trovavi?",
+  "knowledge":    "Mmmm... non importa, passiamo oltre.",
+  "got_no":       "Va bene. Riesci a ricordare qualcosa altro?",
+  "got_yes":      "Capito.",
+  "unknown":      "Scusa ma non ho capito bene. Potresti ripetere?",
+  "got_poi":      "Quindi ti trovavi vicino a un {{poi}}?"
 }
