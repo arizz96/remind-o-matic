@@ -13,6 +13,7 @@ exports.handleAction = function handleAction(action, parameters, req) {
     case 'cityPlace':
     case 'place': data = _place(parameters, req); break;
     case 'unknown': data = _unknown(req); break;
+    case 'no': data = _no(req); break;
   }
 
   return data;
@@ -31,6 +32,14 @@ _unknown = function _unknown(req) {
     action: 'unknown',
     status: 200,
     body: req.__('unknown')
+  }
+};
+
+_no = function _no(req) {
+  return {
+    action: 'no',
+    status: 200,
+    body: req.__('got_no')
   }
 };
 

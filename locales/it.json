@@ -5,7 +5,7 @@
   "got_date":     "Quindi era il {{date}}, vero?",
   "got_place":    "{{place}} è il posto in cui ti trovavi?",
   "knowledge":    "Mmmm... non importa, passiamo oltre.",
-  "got_no":       "No? Mmh... riesci ad essere un po più specifico?",
+  "got_no":       "Va bene. Riesci a ricordare qualcosa altro?",
   "got_yes":      "Capito.",
   "unknown":      "Scusa ma non ho capito bene. Potresti ripetere?",
   "got_poi":      "Quindi ti trovavi vicino a un {{poi}}?"
