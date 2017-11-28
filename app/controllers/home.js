@@ -6,9 +6,9 @@ var Item= require('../models/item')
 
 
 /**************************** COOKIE ERASER ****************************/
-
-var interval = 10000//60000; // in ms = 1 min
-var maxCookieTime = 600000 // in ms = 10 min
+/*
+var interval = 5000//60000; // in ms = 1 min
+var maxCookieTime = 10000 // in ms = 10 min
 
 function cookieEraser() {
   var timeStamp = Date.now();
@@ -16,24 +16,25 @@ function cookieEraser() {
   // Ottengo e stampo tutti gli Users su console (debug)
   console.log("prima:")
   User.find(function (err, users) {
-    if (err) { res.send(err); }
-    console.log(users);
+    if (err) { console.log("Errore0"); }
+    console.log("Utenti: " + users);
   });
   console.log("");
 
-  User.find(function (err, users) {
-    if (err) { res.send(err); }
 
-    // scorro gli utenti, e rimuovo quelli con timeStamp più basso, insieme ai rispettivi item
+  // scorro gli utenti, e rimuovo quelli con timeStamp più basso, insieme ai rispettivi item
+  User.find(function (err, users) {
+    if (err) { console.log("Errore1"); }
+
     for (index in users) {
       user = users[index]
-
+      console.log(user);
       if(timeStamp - user.timeStamp >= maxCookieTime) // se il cookie ha superato il suo massimo tempo di vita, lo cancello
-        User.remove({ _id: user }, function(err){
-          if (err) { res.send(err); }
+        User.remove({ _id: user._id }, function(err){
+          if (err) { console.log("Errore2"); }
         });
-        Item.remove({ remindOMaticId: remindOMaticId }, function(err){
-          if (err) { res.send(err); }
+        Item.remove({ remindOMaticId: user._id }, function(err){
+          if (err) { console.log("Errore3"); }
         });
     }
   });
@@ -41,14 +42,14 @@ function cookieEraser() {
   // Ottengo e stampo tutti gli Users su console (debug)
   console.log("dopo:")
   User.find(function (err, users) {
-    if (err) { res.send(err); }
+    if (err) { console.log("Errore4"); }
     console.log(users);
   });
-
 }
 
 setInterval(cookieEraser, interval); // controllo ogni 1 minuti se ci sono cookie da cancellare
 
+*/
 /***********************************************************************/
 
 
