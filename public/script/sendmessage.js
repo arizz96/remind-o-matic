@@ -1,3 +1,21 @@
+function startSession() {
+  $.ajax({
+    type: 'GET',
+    url: 'api/v1/welcome',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    success: function (data) {
+        console.log(data.action);
+        writeMessage(data.body, 'left');
+      }
+  });
+  document.getElementsByClassName("message_input")[0].focus();
+  console.log("setted focus");
+}
+
+
+
+
 var Message;
 Message = function (arg) {
     this.text = arg.text, this.message_side = arg.message_side;
@@ -56,18 +74,19 @@ function readRequest(){
           // use data
           console.log(data.action);
           switch(data.action){
-            case 'place':
-              // console.log(data.nearbyResults);
+            case 'search':
+              writeMessage(data.body, 'left');
+              console.log(data);
+              console.log(data.nearbyResults);
               var tmp = '';
               if(data.nearbyResults.length > 0){
-                tmp = 'Abbiamo trovato: <br />';
                 for(i = 0; i < data.nearbyResults.length; i++)
-                  tmp += ' - <b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' <br />';
-                tmp += 'Potrebbe essere uno di questi?';
+                  tmp += ' - <button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + data.nearbyResults[i].name +'\')"><b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' </button><br />';
                 writeMessage(tmp, 'left');
               } else {
-                writeMessage(data.body, 'left');
-              }; break;
+              //   writeMessage(data.body, 'left');
+              }
+              break;
               default: writeMessage(data.body, 'left');
           }
 
@@ -79,6 +98,18 @@ function readRequest(){
   }
 }
 
+function clickPOI(coords, name) {
+  $.ajax({
+    type: 'POST',
+    url: 'api/v1/push',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    data: JSON.stringify({ 'coords': coords, 'name': name}),
+    success: function (data) {
+      writeMessage(data.body, 'right');
+    }
+  });
+}
 
 function checkSend(e){
   if (e.keyCode == 13 && document.getElementsByClassName("message_input")[0].value != "")

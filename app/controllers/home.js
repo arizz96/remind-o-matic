@@ -77,7 +77,6 @@ exports.welcome = function(req, res) {
 
 }
 
-
 exports.removeAllUsers = function(req, res) {
   // rimuovo un determinato user
   User.remove(function (err) {
@@ -127,83 +126,116 @@ exports.getAllItemsByUser = function(req, res) {
 
 
 exports.ask = function(req, res) {
-  var options = {
-    sessionId: '123456789'
-  };
+
 
   var cookies = parseCookies(req);
   var remindOMaticId = cookies['remindOMaticId'];
-  var timeStamp = Date.now();
-
-
-  User.findById(remindOMaticId, function (err, user) {
-    if (err) return handleError(err);
-
-    user.timeStamp = timeStamp;
-    user.save(function (err, updatedUser) {
-      if (err) res.send(err);
-    });
-  });
-
-  //console.log(req.body.text);
-  var request = ai.textRequest(req.body.text, options);
-
-  request.on('response', function(response) {
-    console.log(response);
-
-    var action = response.result.action
-    var parameters = response.result.parameters
-
-    Item.findOne({remindOMaticId: remindOMaticId, action: action}, function (err, it) {
-
-      if(it == null && action != "input.unknown"){ // se non esiste un item così, E se è qualcosa che DialogFlow è riuscito a capire, ne creo uno nuovo
-
-        // creo la entry nel DB
-        var item = new Item();
-        item.remindOMaticId = remindOMaticId;
-        item.action = action;
-        item.parameters = parameters
-        item.timeStamp = timeStamp;
-        item.confirmed = false;
-        item.save(function (err) {
-            if (err) { res.send(err); }
-            res.json(item)
-        });
-      }
-      else{
-        res.json("Item già presente")
-      }
+  var options = {
+    sessionId: remindOMaticId
+  };
 
   var request = ai.textRequest(req.body.text, options);
 
   request.on('response', function(response) {
-    Promise.resolve()
-    .then(function() {
-      keyword  = response.result.parameters.geo_poi;
-      rankby   = req.query.rankby || 'distance';
-      location = response.result.parameters.geo_place;
+    // check basic information
 
-      if(keyword && rankby && location)
-        return poisearch.search(keyword, location, rankby);
-      else
-        return [];
-    })
-    .then(function(result){
-      return result;
-    })
-    .then(function(nearbyResults) {
-      action = response.result.action;
-      action = action.substring(action.lastIndexOf('.') + 1);
+    Item.findOne({remindOMaticId: remindOMaticId, step: 'target'}, function(err, item) {
+      if(item == null) {
+        console.log(response.result.action)
+        if(response.result.action == "input.place" || response.result.action == "input.poi" || response.result.action == "input.poiPlace") {
+          pushToDatabase(remindOMaticId, 'target', response.result.parameters);
+          switch (response.result.action) {
+            case 'input.place':
+              res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+              res.end();
+              break;
+            case 'input.poi':
+              res.json(responses.handleAction('miss_place', response.result.parameters, req));
+              res.end();
+              break;
+            case 'input.poiPlace':
+              item = {};
+              item.remindOMaticId = remindOMaticId;
+              item.geo_poi = response.result.parameters.geo_poi;
+              item.geo_place = response.result.parameters.geo_place;
+              _sendSingleSearch(res, item);
+              break;
+          }
 
-      customResponse = responses.handleAction(action, response.result.parameters, req);
-      customResponse['nearbyResults'] = nearbyResults;
-      return customResponse;
-    })
-    .then(function(customResponse) {
-      res.json(customResponse);
-      res.end();
+        }
+
+      } else {
+        if(item.confirmed == false) {
+          console.log("not confirmed");
+          switch (response.result.action) {
+            case 'input.place':
+              item.geo_place = response.result.parameters.geo_place;
+              if(item.geo_place && item.geo_poi)
+                item.confirmed = true;
+              item.markModified('parameters');
+              item.save(function (err, updatedItem) {
+                if (err) console.log(err);
+                console.log(updatedItem);
+              });
+              if(!item.confirmed) {
+                res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+                res.end();
+              }
+              break;
+            case 'input.poi':
+              item.geo_poi = response.result.parameters.geo_poi;
+              if(item.geo_place && item.geo_poi)
+                item.confirmed = true;
+              item.markModified('parameters');
+              item.save(function (err, updatedItem) {
+                if (err) console.log(err);
+                console.log(updatedItem);
+              });
+              if(!item.confirmed) {
+                res.json(responses.handleAction('miss_place', response.result.parameters, req));
+                res.end();
+              }
+              break;
+          }
+        }
+        if(item.confirmed == true){
+          console.log("confirmed");
+          _sendSingleSearch(res, item);
+
+        }
+      }
     });
   });
+
+function _sendSingleSearch(response, i){
+  console.log("entrato in _sendSearch");
+  var res = response;
+  var item = i;
+  Promise.resolve()
+  .then(function() {
+    keyword  = item.geo_poi;
+    rankby   = 'prominence';
+    location = item.geo_place;
+
+    if(keyword && rankby && location)
+      return poisearch.singlePoi(item.remindOMaticId, keyword);
+    else
+      return [];
+  })
+  .then(function(result){
+    return result;
+  })
+  .then(function(nearbyResults) {
+    customResponse = responses.handleAction("search", null, req);
+    customResponse['nearbyResults'] = nearbyResults;
+    return customResponse;
+    console.log(customResponse);
+  })
+  .then(function(customResponse) {
+    res.json(customResponse);
+    res.end();
+  });
+}
 
   request.on('error', function(error) {
     console.log(error);
@@ -211,6 +243,37 @@ exports.ask = function(req, res) {
   });
 
   request.end();
+}
+
+exports.push = function(req, res) {
+  remindOMaticId = parseCookies(req)['remindOMaticId'];
+  parameters = {
+    geo_poi: req.body.coords,
+    geo_place: req.body.name,
+  };
+  pushToDatabase(remindOMaticId, 'POI', parameters);
+  res.json(responses.handleAction('forward', req.body.name, req));
+  res.end();
+}
+
+
+
+
+function pushToDatabase(remindOMaticId, step, parameters) {
+  var item = new Item();
+  item.remindOMaticId = remindOMaticId;
+  item.step = step;
+  item.geo_poi = parameters.geo_poi ? parameters.geo_poi : null;
+  item.geo_place = parameters.geo_place ? parameters.geo_place : null;
+  item.timeStamp = Date.now();
+  if(item.geo_poi && item.geo_place)
+    item.confirmed = true;
+  else
+    item.confirmed = false;
+  item.save(function (err) {
+      if (err) { console.log(err); }
+      console.log("Pushed to DB\n" + item + "\n")
+  });
 }
 
 function parseCookies (req) {

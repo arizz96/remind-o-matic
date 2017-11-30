@@ -1,7 +1,7 @@
 exports.handleAction = function handleAction(action, parameters, req) {
   data = {}
   switch(action) {
-    case 'welcome': data =  _welcome(req); break;
+    // case 'welcome': data =  _welcome(req); break;
 
     case 'dateTime':
     case 'date':
@@ -10,10 +10,15 @@ exports.handleAction = function handleAction(action, parameters, req) {
     case 'city':
     case 'country':
     case 'region':
-    case 'cityPlace':
+    case 'poiPlace':
     case 'place': data = _place(parameters, req); break;
     case 'unknown': data = _unknown(req); break;
     case 'no': data = _no(req); break;
+    case 'miss_poi': data = _missPoi(req); break;
+    case 'miss_place': data = _missPlace(req); break;
+    case 'forward': data = _forward(parameters, req); break;
+    case 'search': data = _search(req); break;
+
   }
 
   return data;
@@ -40,6 +45,38 @@ _no = function _no(req) {
     action: 'no',
     status: 200,
     body: req.__('got_no')
+  }
+};
+
+_missPoi = function _missPoi(req) {
+  return {
+    action: 'miss_poi',
+    status: 200,
+    body: req.__('miss_poi')
+  }
+};
+
+_missPlace = function _missPlace(req) {
+  return {
+    action: 'miss_place',
+    status: 200,
+    body: req.__('miss_place')
+  }
+};
+
+_forward = function _forward(parameters, req) {
+  return {
+    action: 'forward',
+    status: 200,
+    body: req.__('forward', {name: parameters})
+  }
+};
+
+_search = function _search(req) {
+  return {
+    action: 'search',
+    status: 200,
+    body: 'Ecco i posti che abbiamo trovato. È uno di questi?'
   }
 };
 

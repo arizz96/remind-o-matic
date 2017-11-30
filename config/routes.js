@@ -8,12 +8,12 @@ module.exports = function (app, passport) {
 
   v1.get('/welcome', home.welcome);
   v1.post('/ask', home.ask);
+  v1.post('/push', home.push)
   v1.delete('/removeAllUsers', home.removeAllUsers);
   v1.delete('/removeAllItems', home.removeAllItems);
   v1.get('/getAllUsers', home.getAllUsers);
   v1.get('/getAllItems', home.getAllItems);
   v1.get('/getAllItemsByUser', home.getAllItemsByUser);
-
 
   app.use('/api/v1', v1);
   app.use('/', v1); // Set the default version to latest.
