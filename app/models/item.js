@@ -5,8 +5,9 @@ var Schema = mongoose.Schema;
 
 var ItemSchema = new Schema({
     remindOMaticId: String,
-    action: String,
-    parameters: Array,
+    step: String,
+    geo_poi: String,
+    geo_place: String,
     timeStamp: Number,
     confirmed: Boolean
 });
