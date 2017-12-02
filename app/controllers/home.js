@@ -138,73 +138,113 @@ exports.ask = function(req, res) {
 
   request.on('response', function(response) {
     // check basic information
-
-    Item.findOne({remindOMaticId: remindOMaticId, step: 'target'}, function(err, item) {
-      if(item == null) {
-        console.log(response.result.action)
-        if(response.result.action == "input.place" || response.result.action == "input.poi" || response.result.action == "input.poiPlace") {
-          pushToDatabase(remindOMaticId, 'target', response.result.parameters);
-          switch (response.result.action) {
-            case 'input.place':
-              res.json(responses.handleAction('miss_poi', response.result.parameters, req));
-              res.end();
-              break;
-            case 'input.poi':
-              res.json(responses.handleAction('miss_place', response.result.parameters, req));
-              res.end();
-              break;
-            case 'input.poiPlace':
-              item = {};
-              item.remindOMaticId = remindOMaticId;
-              item.geo_poi = response.result.parameters.geo_poi;
-              item.geo_place = response.result.parameters.geo_place;
-              _sendSingleSearch(res, item);
-              break;
-          }
-
-        }
-
-      } else {
-        if(item.confirmed == false) {
-          console.log("not confirmed");
-          switch (response.result.action) {
-            case 'input.place':
-              item.geo_place = response.result.parameters.geo_place;
-              if(item.geo_place && item.geo_poi)
-                item.confirmed = true;
-              item.markModified('parameters');
-              item.save(function (err, updatedItem) {
-                if (err) console.log(err);
-                console.log(updatedItem);
-              });
-              if(!item.confirmed) {
+    if(response.result.action == "input.place" || response.result.action == "input.poi" || response.result.action == "input.poiPlace") {
+      Item.findOne({remindOMaticId: remindOMaticId, step: 'target'}, function(err, item) {
+        if(item == null) {
+          console.log(response.result.action)
+          if(pushToDatabase(remindOMaticId, 'target', response.result.parameters))
+            switch (response.result.action) {
+              case 'input.place':
                 res.json(responses.handleAction('miss_poi', response.result.parameters, req));
                 res.end();
-              }
-              break;
-            case 'input.poi':
-              item.geo_poi = response.result.parameters.geo_poi;
-              if(item.geo_place && item.geo_poi)
-                item.confirmed = true;
-              item.markModified('parameters');
-              item.save(function (err, updatedItem) {
-                if (err) console.log(err);
-                console.log(updatedItem);
-              });
-              if(!item.confirmed) {
+                break;
+              case 'input.poi':
                 res.json(responses.handleAction('miss_place', response.result.parameters, req));
                 res.end();
-              }
-              break;
+                break;
+              case 'input.poiPlace':
+                item = {};
+                item.remindOMaticId = remindOMaticId;
+                item.geo_poi = response.result.parameters.geo_poi;
+                item.geo_place = response.result.parameters.geo_place;
+                _sendSingleSearch(res, item);
+                break;
+            }
+          else {
+            res.json(responses.handleAction('unknown', response.result.parameters, req));
+            res.end();
+          }
+        } else {
+          if(item.confirmed == false) {
+            console.log("not confirmed");
+            console.log(response.result);
+            switch (response.result.action) {
+              case 'input.place':
+                if(response.result.parameters.geo_place != '') {
+                  item.geo_place = response.result.parameters.geo_place;
+                  if(item.geo_place && item.geo_poi)
+                    item.confirmed = true;
+                  // item.markModified('parameters');
+                  item.save(function (err, updatedItem) {
+                    if (err) console.log(err);
+                    console.log(updatedItem);
+                  });
+                  if(!item.confirmed) {
+                    res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+                    res.end();
+                  }
+                } else {
+                  res.json(responses.handleAction('unknown', response.result.parameters, req));
+                  res.end();
+                }
+                break;
+              case 'input.poi':
+                if(response.result.parameters.geo_poi != '') {
+                  item.geo_poi = response.result.parameters.geo_poi;
+                  if(item.geo_place && item.geo_poi)
+                    item.confirmed = true;
+                  // item.markModified('parameters');
+                  item.save(function (err, updatedItem) {
+                    if (err) console.log(err);
+                    console.log(updatedItem);
+                  });
+                  if(!item.confirmed) {
+                    res.json(responses.handleAction('miss_place', response.result.parameters, req));
+                    res.end();
+                  }
+                } else {
+                  res.json(responses.handleAction('unknown', response.result.parameters, req));
+                  res.end();
+                }
+                break;
+                case 'input.poiPlace':
+                  if(response.result.parameters.geo_poi != '' || response.result.parameters.geo_place != '') {
+                  item.geo_poi = response.result.parameters.geo_poi ? parameters.geo_poi : null;
+                  item.geo_place = response.result.parameters.geo_place ? parameters.geo_place : null;
+                    if(item.geo_place && item.geo_poi)
+                      item.confirmed = true;
+                    // item.markModified('parameters');
+                    item.save(function (err, updatedItem) {
+                      if (err) console.log(err);
+                      console.log(updatedItem);
+                    });
+                    if(!item.confirmed) {
+                      if(item.geo_place != null)
+                        res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+                      else
+                        res.json(responses.handleAction('miss_place', response.result.parameters, req));
+                      res.end();
+                    }
+                  } else {
+                    res.json(responses.handleAction('unknown', response.result.parameters, req));
+                    res.end();
+                  }
+                break;
+                default:
+                  res.json(responses.handleAction('unknown', response.result.parameters, req));
+                  res.end();
+                break;
+
+            }
+          }
+          if(item.confirmed == true){
+            console.log("confirmed");
+            _sendSingleSearch(res, item);
+
           }
         }
-        if(item.confirmed == true){
-          console.log("confirmed");
-          _sendSingleSearch(res, item);
-
-        }
-      }
-    });
+      });
+    }
   });
 
 function _sendSingleSearch(response, i){
@@ -270,10 +310,14 @@ function pushToDatabase(remindOMaticId, step, parameters) {
     item.confirmed = true;
   else
     item.confirmed = false;
-  item.save(function (err) {
-      if (err) { console.log(err); }
-      console.log("Pushed to DB\n" + item + "\n")
-  });
+  if(item.geo_poi != null || item.geo_place != null) {
+    item.save(function (err) {
+        if (err) { console.log(err); }
+        console.log("Pushed to DB\n" + item + "\n")
+    });
+    return true;
+  } else
+    return false;
 }
 
 function parseCookies (req) {
