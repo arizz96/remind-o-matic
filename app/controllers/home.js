@@ -5,57 +5,6 @@ var Item= require('../models/item')
 var responses = require('../modules/responses');
 var poisearch = require('../modules/placesearch');
 
-/**************************** COOKIE ERASER ****************************/
-/*
-var interval = 5000//60000; // in ms = 1 min
-var maxCookieTime = 10000 // in ms = 10 min
-
-function cookieEraser() {
-  var timeStamp = Date.now();
-
-  // Ottengo e stampo tutti gli Users su console (debug)
-  console.log("prima:")
-  User.find(function (err, users) {
-    if (err) { console.log("Errore0"); }
-    console.log("Utenti: " + users);
-  });
-  console.log("");
-
-
-  // scorro gli utenti, e rimuovo quelli con timeStamp più basso, insieme ai rispettivi item
-  User.find(function (err, users) {
-    if (err) { console.log("Errore1"); }
-
-    for (index in users) {
-      user = users[index]
-      console.log(user);
-      if(timeStamp - user.timeStamp >= maxCookieTime) // se il cookie ha superato il suo massimo tempo di vita, lo cancello
-        User.remove({ _id: user._id }, function(err){
-          if (err) { console.log("Errore2"); }
-        });
-        Item.remove({ remindOMaticId: user._id }, function(err){
-          if (err) { console.log("Errore3"); }
-        });
-    }
-  });
-
-  // Ottengo e stampo tutti gli Users su console (debug)
-  console.log("dopo:")
-  User.find(function (err, users) {
-    if (err) { console.log("Errore4"); }
-    console.log(users);
-  });
-}
-
-setInterval(cookieEraser, interval); // controllo ogni 1 minuti se ci sono cookie da cancellare
-
-*/
-/***********************************************************************/
-
-
-
-
-
 exports.welcome = function(req, res) {
   // creo la entry nel DB
   var user = new User();
@@ -74,7 +23,6 @@ exports.welcome = function(req, res) {
     status: 200,
     body: req.__('welcome')
   });
-
 }
 
 exports.removeAllUsers = function(req, res) {
@@ -112,7 +60,6 @@ exports.getAllItems = function(req, res) {
   });
 }
 
-
 exports.getAllItemsByUser = function(req, res) {
   var cookies = parseCookies(req);
   var remindOMaticId = cookies['remindOMaticId'];
@@ -124,10 +71,7 @@ exports.getAllItemsByUser = function(req, res) {
   });
 }
 
-
 exports.ask = function(req, res) {
-
-
   var cookies = parseCookies(req);
   var remindOMaticId = cookies['remindOMaticId'];
   var options = {
@@ -257,7 +201,6 @@ exports.ask = function(req, res) {
               });
             }
           }
-        });
         break;
       case 'input.unknown':
         if(item.confirmed) {
@@ -270,7 +213,7 @@ exports.ask = function(req, res) {
         }
         break;
       case 'input.no':
-      f(item.confirmed) {
+      if(item.confirmed) {
         User.findOne({_id: remindOMaticId}, function(err, user){
           _sendSearch(res, item.geo_poi);
           user.status = 'confirmTarget';
@@ -281,30 +224,33 @@ exports.ask = function(req, res) {
         res.json(responses.handleAction('error', response.result.parameters, req));
         res.end();
       }
-  });
-
-  function _sendSearch(response, key){
-    console.log("entrato in _sendSearch");
-    var res = response;
-    var keyword = key;
-    Promise.resolve()
-    .then(function() {
-      return poisearch.search(item.remindOMaticId, keyword);
-    })
-    .then(function(result){
-      return result;
-    })
-    .then(function(nearbyResults) {
-      customResponse = responses.handleAction("search", null, req);
-      customResponse['nearbyResults'] = nearbyResults;
-      return customResponse;
-      console.log(customResponse);
-    })
-    .then(function(customResponse) {
-      res.json(customResponse);
-      res.end();
+    }
     });
-  }
+  });
+}
+
+function _sendSearch(response, key){
+  console.log("entrato in _sendSearch");
+  var res = response;
+  var keyword = key;
+  Promise.resolve()
+  .then(function() {
+    return poisearch.search(item.remindOMaticId, keyword);
+  })
+  .then(function(result){
+    return result;
+  })
+  .then(function(nearbyResults) {
+    customResponse = responses.handleAction("search", null, req);
+    customResponse['nearbyResults'] = nearbyResults;
+    return customResponse;
+    console.log(customResponse);
+  })
+  .then(function(customResponse) {
+    res.json(customResponse);
+    res.end();
+  });
+}
 
 function _sendSingleSearch(response, i){
   console.log("entrato in _sendSearch");
@@ -336,14 +282,6 @@ function _sendSingleSearch(response, i){
   });
 }
 
-  request.on('error', function(error) {
-    console.log(error);
-    res.end();
-  });
-
-  request.end();
-}
-
 exports.push = function(req, res) {
   remindOMaticId = parseCookies(req)['remindOMaticId'];
   parameters = {
@@ -354,9 +292,6 @@ exports.push = function(req, res) {
   res.json(responses.handleAction('forward', req.body.name, req));
   res.end();
 }
-
-
-
 
 function pushToDatabase(remindOMaticId, type, parameters) {
   var item = new Item();
@@ -380,15 +315,15 @@ function pushToDatabase(remindOMaticId, type, parameters) {
 }
 
 function parseCookies (req) {
-    var list = {},
-      rc = req.headers.cookie;
+  var list = {},
+    rc = req.headers.cookie;
 
-    rc && rc.split(';').forEach(function( cookie ) {
-      var parts = cookie.split('=');
-      list[parts.shift().trim()] = decodeURI(parts.join('='));
-    });
+  rc && rc.split(';').forEach(function( cookie ) {
+    var parts = cookie.split('=');
+    list[parts.shift().trim()] = decodeURI(parts.join('='));
+  });
 
-    return list;
+  return list;
 }
 
 exports.answer = function(req, res) {
