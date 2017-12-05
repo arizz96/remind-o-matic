@@ -81,3 +81,27 @@ body {
     display: table-cell;
     vertical-align: middle;
 }
+
+.my-info-container{
+  background-color: var(--c4);
+  min-height:80%;
+  position:fixed;
+  top:10%;
+  bottom:10%;
+  overflow-y: scroll;
+  width: 100%;
+  width: -webkit-fill-available; /*Chrome*/
+  width: -moz-available; /*Firefox*/
+}
+
+.my-info-footer{
+  background-color: var(--c1);
+  height: 10%;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
+}
