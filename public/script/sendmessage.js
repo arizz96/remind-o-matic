@@ -1,3 +1,21 @@
+function startSession() {
+  $.ajax({
+    type: 'GET',
+    url: 'api/v1/welcome',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    success: function (data) {
+        console.log(data.action);
+        writeMessage(data.body, 'left');
+      }
+  });
+  document.getElementsByClassName("message_input")[0].focus();
+  console.log("setted focus");
+}
+
+
+
+
 var Message;
 Message = function (arg) {
     this.text = arg.text, this.message_side = arg.message_side;
@@ -18,9 +36,9 @@ Message = function (arg) {
 function writeMessage (text, side) {
   // alert("writing message " + text);
   var $messages, message;
-  if (text.trim() === '') {
-      return;
-  }
+  // if (text.trim() === '') {
+  //     return;
+  // }
   //$('.message_input').val('');
   $messages = $('.messages');
   message_side = side;
@@ -34,11 +52,7 @@ function writeMessage (text, side) {
   // return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function readRequest(){
+function readRequest(){
   // alert("inizio read");
   // writeMessage('response', 'left');
   // alert("stampato response");
@@ -47,13 +61,55 @@ async function readRequest(){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
     console.log(message_input.value);
     writeMessage(message_input.value, 'right');
+    var info = { "text" : message_input.value };
+    // console.log(info);
+
+    $.ajax({
+      type: 'POST',
+      url: 'api/v1/ask',
+      acceptedLanguage: 'it',
+      contentType: 'application/json',
+      data: JSON.stringify(info),
+      success: function (data) {
+          // use data
+          console.log(data.action);
+          switch(data.action){
+            case 'search':
+              writeMessage(data.body, 'left');
+              console.log(data);
+              console.log(data.nearbyResults);
+              var tmp = '';
+              if(data.nearbyResults.length > 0){
+                for(i = 0; i < data.nearbyResults.length; i++)
+                  tmp += ' - <button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + data.nearbyResults[i].name +'\')"><b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' </button><br />';
+                writeMessage(tmp, 'left');
+              } else {
+              //   writeMessage(data.body, 'left');
+              }
+              break;
+              default: writeMessage(data.body, 'left');
+          }
+
+        }
+    });
     message_input.value = '';
-    await sleep(1000);
-    writeMessage('response', 'left');
+
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
 }
 
+function clickPOI(coords, name) {
+  $.ajax({
+    type: 'POST',
+    url: 'api/v1/push',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    data: JSON.stringify({ 'coords': coords, 'name': name}),
+    success: function (data) {
+      writeMessage(data.body, 'right');
+    }
+  });
+}
 
 function checkSend(e){
   if (e.keyCode == 13 && document.getElementsByClassName("message_input")[0].value != "")
