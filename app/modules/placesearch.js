@@ -2,14 +2,15 @@ var rp = require('request-promise');
 var User = require('../models/user');
 var Item= require('../models/item')
 
-search = function search(remindOMaticId) {
+search = function search(remindOMaticId, key) {
+  var keyword = key;
   return Item.find({remindOMaticId: remindOMaticId}).exec()
   .then(function(items){
     var averageLat = 0, averageLng = 0, poiCount = 0;
     var targetItem;
     console.log("TEST\n" + items);
     for(i = 0; i < items.length; i++)
-      if(items[i].step == "target")
+      if(items[i].type == "target")
         targetItem = items[i];
       else {
         tmp = items[i].geo_poi.split(',')
@@ -23,7 +24,7 @@ search = function search(remindOMaticId) {
     var parameters = {};
     parameters.rankby = 'distance'
     parameters.key = process.env.MAPS_KEY;
-    parameters.keyword = targetItem.geo_poi;
+    parameters.keyword = keyword;
     parameters.location = averageLat + ',' + averageLng;
     console.log(parameters);
     return parameters;
@@ -65,7 +66,7 @@ singlePoi = function(remindOMaticId, keyword) {
   .then(function(items){
     var targetItem;
     for(i = 0; i < items.length; i++)
-      if(items[i].step == "target")
+      if(items[i].type == "target")
         targetItem = items[i];
     var url = "https://" + process.env.MAPS_HOST + process.env.MAPS_PLACE_URL + process.env.FORMAT + "?key=" + process.env.MAPS_KEY + "&address=" + targetItem.geo_place;
     return rp(url);
