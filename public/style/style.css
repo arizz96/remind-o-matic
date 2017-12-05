@@ -16,7 +16,13 @@ body {
 #ico{
   height : 50px;
   width :auto;
-  margin-right: 20px
+  margin-top: -7px;
+}
+
+#info{
+  height : 50px;
+  width :auto;
+  margin-top: -7px;
 }
 
 #h-title{
