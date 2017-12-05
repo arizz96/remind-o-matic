@@ -1,6 +1,7 @@
 var express = require('express');
 var home = require('../app/controllers/home');
 var help = require('../app/controllers/help');
+var finish = require('../app/controllers/finish');
 
 //you can include all your controllers
 
@@ -9,6 +10,7 @@ module.exports = function (app, passport) {
 
   v1.get('/welcome', home.welcome);
   v1.get('/help', help.help);
+  v1.get('/finish', finish.finish);
   v1.post('/ask', home.ask);
   v1.post('/push', home.push)
   v1.delete('/removeAllUsers', home.removeAllUsers);

@@ -12,5 +12,6 @@
   "miss_poi":     "Che punto di interesse stai cercando? (bar, pizzeria, cinema, museo, ...)",
   "miss_place":   "Ti ricordi in che città si trova il punto di interesse che stai cercando?",
   "forward":      "Quindi si trovava vicino a {{name}}. Ti ricordi qualcosa altro vicino a quel posto?",
-  "help":         "Remind-O-Matic ti permette di ricordare alcuni ricordi che davi per dimenticati. Infatti, inserendo un luogo e un punto di interesse ad esso associato, può trovare luoghi che rispettano i dati inseriti. Si potrà in futuro fare delle ricerche sulla base di quello che hanno fatto i propri amici. Il progetto è stato realizzato da: Alessandro Rizzo, Leonardo Dal Ronco, Giulio Pellizzari, Domenico Stefani, Matteo Tadiello, durante il terzo anno di studi all'università di Trento, corso di laurea in informatica."
+  "help":         "Remind-O-Matic ti permette di ricordare alcuni ricordi che davi per dimenticati. Infatti, inserendo un luogo e un punto di interesse ad esso associato, può trovare luoghi che rispettano i dati inseriti. Si potrà in futuro fare delle ricerche sulla base di quello che hanno fatto i propri amici. Il progetto è stato realizzato da: Alessandro Rizzo, Leonardo Dal Ronco, Giulio Pellizzari, Domenico Stefani, Matteo Tadiello, durante il terzo anno di studi all'università di Trento, corso di laurea in informatica.",
+  "finish":       "Bene! Siamo felici di averti aiutato a ricordare!"
 }
