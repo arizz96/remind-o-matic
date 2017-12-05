@@ -8,7 +8,7 @@ search = function search(remindOMaticId, key) {
   .then(function(items){
     var averageLat = 0, averageLng = 0, poiCount = 0;
     var targetItem;
-    console.log("TEST\n" + items);
+    // console.log("TEST\n" + items);
     for(i = 0; i < items.length; i++)
       if(items[i].type == "target")
         targetItem = items[i];
@@ -20,13 +20,13 @@ search = function search(remindOMaticId, key) {
       }
     averageLat /= poiCount;
     averageLng /= poiCount;
-
+    console.log("send search with coords " + averageLat + "," + averageLng);
     var parameters = {};
     parameters.rankby = 'distance'
     parameters.key = process.env.MAPS_KEY;
-    parameters.keyword = keyword;
+    parameters.keyword = keyword == null ? targetItem.geo_poi : keyword;
     parameters.location = averageLat + ',' + averageLng;
-    console.log(parameters);
+    // console.log(parameters);
     return parameters;
   })
   .then(function(parameters){
@@ -34,7 +34,7 @@ search = function search(remindOMaticId, key) {
     for(var key in parameters)
       url += key + "=" + parameters[key] + "&";
     url = url.slice(0, -1);
-    console.log(url);
+    // console.log(url);
     return rp(url);
   })
   .then(function(repos) {
@@ -53,7 +53,7 @@ search = function search(remindOMaticId, key) {
         name:    jsonResponse.results[i].name,
         address: jsonResponse.results[i].vicinity
       });
-    console.log(values);
+    // console.log(values);
     return values;
   });
 }
@@ -68,6 +68,7 @@ singlePoi = function(remindOMaticId, keyword) {
     for(i = 0; i < items.length; i++)
       if(items[i].type == "target")
         targetItem = items[i];
+    console.log(targetItem);
     var url = "https://" + process.env.MAPS_HOST + process.env.MAPS_PLACE_URL + process.env.FORMAT + "?key=" + process.env.MAPS_KEY + "&address=" + targetItem.geo_place;
     return rp(url);
   })
@@ -76,6 +77,7 @@ singlePoi = function(remindOMaticId, keyword) {
     return repos;
   })
   .then(function(response){
+    // console.log(response);
     jsonResponse = JSON.parse(response);
     var parameters = {};
     parameters.location = jsonResponse.results[0].geometry.location.lat + "," + jsonResponse.results[0].geometry.location.lng;
@@ -98,13 +100,16 @@ singlePoi = function(remindOMaticId, keyword) {
   .then(function(response){
     jsonResponse = JSON.parse(response);
     values = [];
-    for(i = 0; i < Math.min(jsonResponse.results.length, process.env.LIMIT); i++)
+    for(i = 0; i < Math.min(jsonResponse.results.length, process.env.LIMIT); i++){
       values.push({
         coords:     jsonResponse.results[i].geometry.location.lat + ',' + jsonResponse.results[i].geometry.location.lng,
         icon:    jsonResponse.results[i].icon,
         name:    jsonResponse.results[i].name,
         address: jsonResponse.results[i].vicinity
       });
+      // console.log(i);
+      // console.log(values);
+    }
     return values;
   });
 }
