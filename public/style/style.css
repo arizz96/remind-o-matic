@@ -27,6 +27,7 @@ body {
 
 #h-title{
   font-size : 4vh;
+  font-weight: 700;
   color: var(--c4);
   vertical-align: middle;
 }
