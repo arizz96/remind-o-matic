@@ -45,7 +45,12 @@ app.use(i18n.init);
 var mongoose = require('mongoose');
 var configDB = require('./config/database.js');
 //configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
+var options = {
+    useMongoClient: true,
+    //user: '',
+    //pass: ''
+  };
+mongoose.connect(configDB.url, options); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
