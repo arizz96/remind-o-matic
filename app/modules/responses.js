@@ -1,23 +1,25 @@
-exports.handleAction = function handleAction(action, parameters, req) {
+exports.handleAction = function handleAction(action, req) {
   data = {}
   switch(action) {
     // case 'welcome': data =  _welcome(req); break;
 
     case 'dateTime':
     case 'date':
-    case 'time': data = _dateTime(parameters, req); break;
-
-    case 'city':
-    case 'country':
-    case 'region':
-    case 'poiPlace':
-    case 'place': data = _place(parameters, req); break;
+    // case 'time': data = _dateTime(parameters, req); break;
+    //
+    // case 'city':
+    // case 'country':
+    // case 'region':
+    // case 'poiPlace':
+    // case 'place': data = _place(parameters, req); break;
     case 'unknown': data = _unknown(req); break;
     case 'no': data = _no(req); break;
     case 'miss_poi': data = _missPoi(req); break;
     case 'miss_place': data = _missPlace(req); break;
-    case 'forward': data = _forward(parameters, req); break;
+    case 'forward': data = _forward(req); break;
     case 'search': data = _search(req); break;
+    case 'finish': data = _finish(req); break;
+    case 'error_finish': data = _errorFinish(req); break;
 
   }
 
@@ -29,6 +31,22 @@ _welcome = function _welcome(req) {
     action: 'welcome',
     status: 200,
     body: req.__('welcome')
+  }
+};
+
+_finish = function _finish(req) {
+  return {
+    action: 'finish',
+    status: 200,
+    body: 'Siamo contenti di averti aiutato a trovare il posto che cercavi'
+  }
+};
+
+_errorFinish = function _errorFinish(req) {
+  return {
+    action: 'error_finish',
+    status: 200,
+    body: 'Siamo spiacenti ma non possiamo più aiutarti nella tua ricerca'
   }
 };
 
@@ -64,11 +82,11 @@ _missPlace = function _missPlace(req) {
   }
 };
 
-_forward = function _forward(parameters, req) {
+_forward = function _forward(req) {
   return {
     action: 'forward',
     status: 200,
-    body: req.__('forward', {name: parameters})
+    body: req.__('forward')
   }
 };
 

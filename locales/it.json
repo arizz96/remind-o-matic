@@ -11,5 +11,5 @@
   "got_poi":      "Quindi ti trovavi vicino a un {{poi}}?",
   "miss_poi":     "Che punto di interesse stai cercando? (bar, pizzeria, cinema, museo, ...)",
   "miss_place":   "Ti ricordi in che città si trova il punto di interesse che stai cercando?",
-  "forward":      "Quindi si trovava vicino a {{name}}. Ti ricordi qualcosa altro vicino a quel posto?"
+  "forward":      "Ok grazie. Ti ricordi qualcosa altro vicino a quel posto?"
 }

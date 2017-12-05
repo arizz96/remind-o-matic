@@ -10,6 +10,7 @@ exports.welcome = function(req, res) {
   var user = new User();
 
   user.timeStamp = Date.now();
+  console.log("set status to first");
   user.status = 'first';
   user.save(function (err) {
     if (err) { res.send(err); }
@@ -77,13 +78,14 @@ exports.ask = function(req, res) {
   var options = {
     sessionId: remindOMaticId
   };
-
+  console.log("entrato nell'ask");
   var request = ai.textRequest(req.body.text, options);
-
   request.on('response', function(response) {
     // check basic information
-
+    console.log(response);
+    //var response = ai_response;
     Item.findOne({remindOMaticId: remindOMaticId, type: 'target'}, function(err, item) {
+      console.log(response);
       switch(response.result.action) {
         case "input.place":
         case "input.poi":
@@ -93,11 +95,11 @@ exports.ask = function(req, res) {
             if(pushToDatabase(remindOMaticId, 'target', response.result.parameters)) {
               switch (response.result.action) {
                 case 'input.place':
-                  res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+                  res.json(responses.handleAction('miss_poi', req));
                   res.end();
                   break;
                 case 'input.poi':
-                  res.json(responses.handleAction('miss_place', response.result.parameters, req));
+                  res.json(responses.handleAction('miss_place', req));
                   res.end();
                   break;
                 case 'input.poiPlace':
@@ -106,10 +108,15 @@ exports.ask = function(req, res) {
                   item.geo_poi = response.result.parameters.geo_poi;
                   item.geo_place = response.result.parameters.geo_place;
                   _sendSingleSearch(res, item);
+                  User.findOne({_id: remindOMaticId}, function(err, user){
+                    console.log("switch status from " + user.status + " to confirmTargetFirst");
+                    user.status = 'confirmTargetFirst';
+                    user.save();
+                  });
                   break;
               }
             } else {
-              res.json(responses.handleAction('unknown', response.result.parameters, req));
+              res.json(responses.handleAction('unknown', req));
               res.end();
             }
           } else {
@@ -128,11 +135,11 @@ exports.ask = function(req, res) {
                       console.log(updatedItem);
                     });
                     if(!item.confirmed) {
-                      res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+                      res.json(responses.handleAction('miss_poi', req));
                       res.end();
                     }
                   } else {
-                    res.json(responses.handleAction('unknown', response.result.parameters, req));
+                    res.json(responses.handleAction('unknown', req));
                     res.end();
                   }
                   break;
@@ -147,11 +154,11 @@ exports.ask = function(req, res) {
                       console.log(updatedItem);
                     });
                     if(!item.confirmed) {
-                      res.json(responses.handleAction('miss_place', response.result.parameters, req));
+                      res.json(responses.handleAction('miss_place',req));
                       res.end();
                     }
                   } else {
-                    res.json(responses.handleAction('unknown', response.result.parameters, req));
+                    res.json(responses.handleAction('unknown', req));
                     res.end();
                   }
                   break;
@@ -168,18 +175,18 @@ exports.ask = function(req, res) {
                       });
                       if(!item.confirmed) {
                         if(item.geo_place != null)
-                          res.json(responses.handleAction('miss_poi', response.result.parameters, req));
+                          res.json(responses.handleAction('miss_poi', req));
                         else
-                          res.json(responses.handleAction('miss_place', response.result.parameters, req));
+                          res.json(responses.handleAction('miss_place', req));
                         res.end();
                       }
                     } else {
-                      res.json(responses.handleAction('unknown', response.result.parameters, req));
+                      res.json(responses.handleAction('unknown', req));
                       res.end();
                     }
                   break;
                   default:
-                    res.json(responses.handleAction('unknown', response.result.parameters, req));
+                    res.json(responses.handleAction('unknown', req));
                     res.end();
                   break;
               }
@@ -190,58 +197,104 @@ exports.ask = function(req, res) {
                 switch (user.status) {
                   case 'first':
                     _sendSingleSearch(res, item);
-                    user.status = 'confirmTarget';
+                    console.log("switch status from " + user.status + " to confirmTargetFirst");
+                    user.status = 'confirmTargetFirst';
                     user.save();
                     break;
-                  case 'near':
-                    _sendSearch(res, response.result.parameters.geo_poi);
+                  // case 'confirmTargetFinal':
+                  //   console.log("chiamata _sendSearch da riga 203");
+                  //   _sendSearch(res, item.geo_poi);
+                  //   user.status = 'confirmNear';
+                  //   user.save();
+                  //   break;
+                  case 'firstForward':
+                  case 'forward':
+                    console.log(response.result);
+                    // finchè non si trova un poi vicino a quello cercato devo chiamare la single
+                    // dopo posso chiamare la search
+                    Item.find({remindOMaticId: remindOMaticId, type: {'$ne': 'target' }}, function(err, result) {
+                      console.log(result);
+                      if(result.length == 0) {
+                        console.log("chiamata _sendSearch da riga 213");
+                        _sendSingleSearch(res, {remindOMaticId: remindOMaticId, geo_poi: response.result.parameters.geo_poi, geo_place: item.geo_place});
+                      }
+                      else {
+                        console.log("chiamata _sendSearch da riga 216");
+                        _sendSearch(res, remindOMaticId, response.result.parameters.geo_poi)
+                      }
+                    });
+                    console.log("switch status from " + user.status + " to confirmNear");
                     user.status = 'confirmNear';
                     user.save();
                 }
               });
             }
           }
-        break;
-      case 'input.unknown':
-        if(item.confirmed) {
-          res.json(responses.handleAction('unknown', response.result.parameters, req));
-          res.end();
-        } else {
-          // dirgi che prima deve inserire poi e place
-          res.json(responses.handleAction('error', response.result.parameters, req));
-          res.end();
-        }
-        break;
-      case 'input.no':
-      if(item.confirmed) {
-        User.findOne({_id: remindOMaticId}, function(err, user){
-          _sendSearch(res, item.geo_poi);
-          user.status = 'confirmTarget';
-          user.save();
-        });
-      } else {
-        // dirgi che prima deve inserire poi e place
-        res.json(responses.handleAction('error', response.result.parameters, req));
-        res.end();
+          break;
+        case 'input.unknown':
+          if(item.confirmed) {
+            res.json(responses.handleAction('unknown', req));
+            res.end();
+          } else {
+            // dirgi che prima deve inserire poi e place
+            res.json(responses.handleAction('error', req));
+            res.end();
+          }
+          break;
+        case 'input.no':
+          console.log("input no");
+          if(item.confirmed) {
+            User.findOne({_id: remindOMaticId}, function(err, user){
+              console.log(user.status);
+              switch (user.status) {
+                case 'firstForward':
+                  res.json(responses.handleAction('error_finish'));
+                  res.end();
+                  console.log("switch status from " + user.status + " to end")
+                  user.status = 'end';
+                  user.save();
+                  break;
+                  break;
+                case 'forward':
+                  Item.findOne({remindOMaticId: remindOMaticId, type: 'target'}, function(err, item) {
+                    _sendSearch(res, remindOMaticId, null);
+                    console.log("switch status from " + user.status + " to confirmTargetFinal");
+                    user.status = 'confirmTargetFinal';
+                    user.save();
+                  });
+                  break;
+              }
+            });
+          } else {
+            // dirgi che prima deve inserire poi e place
+            res.json(responses.handleAction('error', req));
+            res.end();
+          }
+          break;
       }
-    }
     });
   });
+
+  request.on('error', function(error) {
+       console.log(error);
+  });
+  request.end();
 }
 
-function _sendSearch(response, key){
+function _sendSearch(response, id, poi){
   console.log("entrato in _sendSearch");
   var res = response;
-  var keyword = key;
+  var remindOMaticId = id;
+  var geo_poi = poi;
   Promise.resolve()
   .then(function() {
-    return poisearch.search(item.remindOMaticId, keyword);
+    return poisearch.search(remindOMaticId, geo_poi);
   })
   .then(function(result){
     return result;
   })
   .then(function(nearbyResults) {
-    customResponse = responses.handleAction("search", null, req);
+    customResponse = responses.handleAction("search");
     customResponse['nearbyResults'] = nearbyResults;
     return customResponse;
     console.log(customResponse);
@@ -253,28 +306,31 @@ function _sendSearch(response, key){
 }
 
 function _sendSingleSearch(response, i){
-  console.log("entrato in _sendSearch");
+  // console.log("entrato in _sendSingleSearch");
   var res = response;
   var item = i;
+  // console.log(item);
   Promise.resolve()
   .then(function() {
-    keyword  = item.geo_poi;
-    rankby   = 'prominence';
-    location = item.geo_place;
+    parameters = {
+      keyword:  item.geo_poi,
+      location: item.geo_place
+    };
 
-    if(keyword && rankby && location)
-      return poisearch.singlePoi(item.remindOMaticId, keyword);
-    else
-      return [];
+    // if(keyword && rankby && location)
+    return poisearch.singlePoi(item.remindOMaticId, item.geo_poi);
+    // else
+    //   return [];
   })
   .then(function(result){
     return result;
   })
   .then(function(nearbyResults) {
-    customResponse = responses.handleAction("search", null, req);
+    // console.log(nearbyResults);
+    customResponse = responses.handleAction("search");
     customResponse['nearbyResults'] = nearbyResults;
     return customResponse;
-    console.log(customResponse);
+    // console.log(customResponse);
   })
   .then(function(customResponse) {
     res.json(customResponse);
@@ -283,14 +339,62 @@ function _sendSingleSearch(response, i){
 }
 
 exports.push = function(req, res) {
-  remindOMaticId = parseCookies(req)['remindOMaticId'];
-  parameters = {
+  var request = req;
+  var type = req.body.type;
+  var parameters = {
     geo_poi: req.body.coords,
     geo_place: req.body.name,
   };
-  pushToDatabase(remindOMaticId, 'POI', parameters);
-  res.json(responses.handleAction('forward', req.body.name, req));
-  res.end();
+  var remindOMaticId = parseCookies(req)['remindOMaticId'];
+  User.findOne({_id: remindOMaticId}, function(err, user){
+    if(type == 'poi'){
+      switch(user.status){
+        case 'confirmTargetFirst':
+        case 'confirmTargetFinal':
+          // fix handleAction response
+          res.json(responses.handleAction('finish'));
+          res.end();
+          console.log("switch status from " + user.status + " to end");
+          user.status = 'end';
+          user.save();
+          break;
+        case 'confirmNear':
+          pushToDatabase(remindOMaticId, 'POI', parameters);
+          res.json(responses.handleAction('forward', request));
+          res.end();
+          console.log("switch status from " + user.status + " to forward");
+          user.status = 'forward';
+          user.save();
+          break;
+      }
+    } else {
+      switch(user.status){
+        case 'confirmTargetFirst':
+          res.json(responses.handleAction('forward', request));
+          res.end();
+          console.log("switch status from " + user.status + " to firstForward")
+          user.status = 'firstForward';
+          user.save();
+          break;
+        case 'confirmNear':
+          res.json(responses.handleAction('forward', request));
+          res.end();
+          console.log("switch status from " + user.status + " to forward")
+          user.status = 'forward';
+          user.save();
+          break;
+        case 'confirmTargetFinal':
+          res.json(responses.handleAction('error_finish'));
+          res.end();
+          console.log("switch status from " + user.status + " to end")
+          user.status = 'end';
+          user.save();
+          break;
+      }
+    }
+  });
+
+
 }
 
 function pushToDatabase(remindOMaticId, type, parameters) {
