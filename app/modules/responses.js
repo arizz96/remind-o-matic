@@ -12,6 +12,7 @@ exports.handleAction = function handleAction(action, req) {
     // case 'region':
     // case 'poiPlace':
     // case 'place': data = _place(parameters, req); break;
+    case 'error':
     case 'unknown': data = _unknown(req); break;
     case 'no': data = _no(req); break;
     case 'miss_poi': data = _missPoi(req); break;
