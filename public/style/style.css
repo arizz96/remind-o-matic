@@ -89,7 +89,7 @@ body {
     vertical-align: middle;
 }
 
-.my-info-container{
+.info-container{
   background-color: var(--c4);
   min-height:80%;
   position:fixed;
@@ -99,6 +99,35 @@ body {
   width: 100%;
   width: -webkit-fill-available; /*Chrome*/
   width: -moz-available; /*Firefox*/
+}
+
+.info-box{
+  color: var(--c1);
+  background-color: var(--c5);
+  margin-top: 70px;
+  margin-bottom: 10px;
+  padding: 20px;
+  display: inline-block;
+  border-radius: 6px;
+  width: 100%;
+  min-width: 100px;
+  position: relative;
+}
+
+.info-home-button{
+  color: var(--c1);
+  background-color: var(--c5);
+  padding: 20px;
+  display: inline-block;
+  border-radius: 6px;
+  width: 100%;
+  min-width: 100px;
+  position: relative;
+}
+
+.info-home-button:hover{
+    color: var(--c5);
+    background-color: var(--c1);
 }
 
 .my-info-footer{
