@@ -1,5 +1,10 @@
 html{
-  height: 100%
+  height: 100%;
+  --c1: #112236;
+  --c2: #436280;
+  --c3: #A3BAD2;
+  --c4: #DBE4ED;
+  --c5: #F7F7F7;
 }
 
 body {
@@ -11,23 +16,42 @@ body {
 #ico{
   height : 50px;
   width :auto;
-  margin-right: 20px
+  margin-top: -7px;
+}
+
+#info{
+  height : 50px;
+  width :auto;
+  margin-top: -7px;
 }
 
 #h-title{
-  /*font-size : 1.5em;*/
-  font-size : 3.5vh;
+  font-size : 4vh;
+  font-weight: 700;
+  color: var(--c4);
+  vertical-align: middle;
 }
 
 .h-button{
+  font-weight: bold;
   display: table;
-  margin-left: auto
+  margin-left: auto;
+  border: 2px solid var(--c2);
+  background-color: var(--c2);
+  color: var(--c4);
+  transition: all 0.5s;
 /*  width: 10%;
   margin-right: 45%;
   margin-left: 45%;*/
 }
 
+.h-button:hover{
+  background-color: var(--c3);
+  color: var(--c2);
+}
+
 .my-header{
+  background-color: var(--c1);
   height: 10%;
   min-height: 10%;
   margin-right: 0px;
@@ -35,43 +59,56 @@ body {
   padding: 15px
 }
 
-.my-footer{
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right:0;
-  overflow: auto
+.chat-container{
+  background-color: var(--c4);
+  min-height:82%;
+  position:fixed;
+  top:10%;
+  bottom:10%;
+  overflow-y: scroll;
+  width: 100%;
+  width: -webkit-fill-available; /*Chrome*/
+  width: -moz-available; /*Firefox*/
 }
 
-.chat-container{
+.my-footer{
+  background-color: var(--c5);
+  height: 8%;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
+}
+
+.middle-column{
+    float: none;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.my-info-container{
+  background-color: var(--c4);
   min-height:80%;
   position:fixed;
   top:10%;
   bottom:10%;
   overflow-y: scroll;
-  width: -webkit-fill-available
+  width: 100%;
+  width: -webkit-fill-available; /*Chrome*/
+  width: -moz-available; /*Firefox*/
 }
 
-.color1{
-  background-color: #36453B;
-  color: #36453B
-}
-.color2{
-  color: #596869
-}
-.color3{
-  color: #515751
-}
-.color4{
-  color: #F5F9E9
-}
-.color5{
-  color: #C2C1A5
-}
-
-.middle-column
-{
-    float: none;
-    display: table-cell;
-    vertical-align: middle;
+.my-info-footer{
+  background-color: var(--c1);
+  height: 10%;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
 }
