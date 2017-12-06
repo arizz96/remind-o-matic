@@ -52,13 +52,17 @@
     </div>
 
     <footer class="bottom_wrapper clearfix my-footer fixed-bottom">
-      <div class="message_input_wrapper">
-        <input class="message_input" placeholder="Type your message here..." onkeydown="checkSend(event)"/>
-      </div>
+      <div id='text_input_div'>
+        <div class="message_input_wrapper">
+          <input class="message_input" placeholder="Type your message here..." onkeydown="checkSend(event)"/>
+        </div>
 
-      <div class="send_message" onclick="readRequest()">
-        <div class="icon"></div>
-        <div class="text">Send</div>
+        <div class="send_message" onclick="readRequest()">
+          <div class="icon"></div>
+          <div class="text">Send</div>
+        </div>
+      </div>
+      <div id='button_input_div'>
       </div>
     </footer>
   </body>
