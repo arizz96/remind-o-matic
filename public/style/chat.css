@@ -112,14 +112,24 @@
   margin-bottom: auto;
 }
 
-.send_message:hover {
-  color: var(--c1);
-  background-color: var(--c5);
+.send_poi {
+  color: var(--c5);
+  background-color: var(--c1);
+  height: 100%;
+  width: 16%;
+  border-radius: 5px;
+  border: 2px solid var(--c1);
+  cursor: pointer;
+  transition: all 0.5s linear;
+  text-align: center;
+  word-wrap: break-word;
+  margin-left: 0.5%;
 }
 
-.send_message .text {
-  /*font-size: 100%;*/
-  /*line-height: 48px;*/
+
+.send_message:hover, .send_poi:hover {
+  color: var(--c1);
+  background-color: var(--c5);
 }
 
 .message_template {
