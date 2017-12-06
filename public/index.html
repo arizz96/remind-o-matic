@@ -56,6 +56,18 @@
 
     </div>
 
+
+
+    <footer class="row my-footer">
+      <div class="col-10 col-md-11 message_input_wrapper">
+        <input class="message_input" placeholder="Cosa vuoi chiedermi?" onkeydown="checkSend(event)"/>
+      </div>
+
+      <button class="btn col-2 col-md-1 send_message" onclick="readRequest()">
+        <div class="text">Invia</div>
+      </button>
+    </footer>
+
     <!-- Popup di Aiuto/Info -->
     <div id="infopopup" class="overlay">
     	<div class="popup">
@@ -72,14 +84,5 @@
     </div>
     <!--Fine del popup  -->
 
-    <footer class="row my-footer">
-      <div class="col-10 col-md-11 message_input_wrapper">
-        <input class="message_input" placeholder="Cosa vuoi chiedermi?" onkeydown="checkSend(event)"/>
-      </div>
-
-      <button class="btn col-2 col-md-1 send_message" onclick="readRequest()">
-        <div class="text">Invia</div>
-      </button>
-    </footer>
   </body>
 </html>
