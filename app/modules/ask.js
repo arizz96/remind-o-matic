@@ -124,7 +124,7 @@ exports.no = function(remindOMaticId, req, res, apiAiResponse, item) {
   if(item != null) {
     if(item.confirmed) {
       User.findOne({ _id: remindOMaticId })
-      .then(function(item) {
+      .then(function(user) {
         switch (user.status) {
           case 'firstForward':
             res.json(responses.handleAction('error_finish', req));
