@@ -51,6 +51,7 @@ var options = {
     //pass: ''
   };
 mongoose.connect(configDB.url, options); // connect to our database
+mongoose.Promise = Promise; 
 
 require('./config/passport')(passport); // pass passport for configuration
 

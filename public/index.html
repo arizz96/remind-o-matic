@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Hello, world!</title>
+    <title>Remind-O-Matic</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,7 +10,11 @@
     <link rel="stylesheet" href="./style/css/bootstrap.min.css">
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/chat.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./style/popup.css">
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.js"
+      integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+      crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <!-- <script src="./script/chat.js"></script> -->
@@ -20,17 +24,34 @@
 
   </head>
   <body onload="startSession()">
-    <header class="row color1 my-header justify-content-center fixed-top">
+    <!-- Popup, al momento non funziona -->
+    <div id="infopopup" class="overlay">
+    	<div class="popup">
+    		<h2>Aiuto</h2>
+    		<a class="close" href="#">&times;</a>
+    		<div class="content">
+
+    		</div>
+
+        <button onClick="location.href='info.html'">Più informazioni</button>
+    	</div>
+    </div>
+    <!--Fine del popup  -->
+
+
+    <header class="row my-header justify-content-center fixed-top">
         <div class="col-2">
-          <img id="ico" src="./img/Ico-RemindOMatic.png" alt="ico">
+          <img id="ico" src="./img/Ico-RemindOMatic.png" onclick="location.href='index.html'" alt="ico">
         </div>
-        <div class="col-7 middle-column">
-          <h1 id="h-title" class="color4 text-center" >Remind-O-Matic</h1>
+        <div class="col-8 middle-column">
+          <h1 id="h-title" class="text-center">Remind-O-Matic</h1>
         </div>
-        <div class="col-3">
-            <button class="btn h-button" type="button">info</button>
+        <div class="col-2">
+            <img id="info" src="./img/info.png" onclick="location.href='#infopopup'" alt="info">
         </div>
     </header>
+    <!-- Popup Help message -->
+
 
     <!-- Chat body -->
     <div id="chat_body" class="row chat-container justify-content-center ">
@@ -51,19 +72,23 @@
 
     </div>
 
-    <footer class="bottom_wrapper clearfix my-footer fixed-bottom">
+    <footer class="row my-footer">
       <div id='text_input_div'>
-        <div class="message_input_wrapper">
-          <input class="message_input" placeholder="Type your message here..." onkeydown="checkSend(event)"/>
+        <div class="col-10 col-md-11 message_input_wrapper">
+          <input class="message_input" placeholder="Cosa vuoi chiedermi?" onkeydown="checkSend(event)"/>
         </div>
 
-        <div class="send_message" onclick="readRequest()">
-          <div class="icon"></div>
-          <div class="text">Send</div>
+        <div class="btn col-2 col-md-1 send_message" onclick="readRequest()">
+          <div class="text">Invia</div>
         </div>
       </div>
       <div id='button_input_div'>
       </div>
+
+
+      <!-- <button class="btn col-2 col-md-1 send_message" onclick="readRequest()">
+        <div class="text">Invia</div>
+      </button> -->
     </footer>
   </body>
 </html>
