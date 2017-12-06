@@ -1,4 +1,4 @@
-exports.help = function(req, res) {
+exports.show = function(req, res) {
   res.json({
     action: 'help',
     status: 200,

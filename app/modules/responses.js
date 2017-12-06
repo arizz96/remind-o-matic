@@ -1,17 +1,6 @@
 exports.handleAction = function handleAction(action, req) {
-  data = {}
+  data = {};
   switch(action) {
-    // case 'welcome': data =  _welcome(req); break;
-
-    case 'dateTime':
-    case 'date':
-    // case 'time': data = _dateTime(parameters, req); break;
-    //
-    // case 'city':
-    // case 'country':
-    // case 'region':
-    // case 'poiPlace':
-    // case 'place': data = _place(parameters, req); break;
     case 'error':
     case 'unknown': data = _unknown(req); break;
     case 'no': data = _no(req); break;
@@ -21,9 +10,7 @@ exports.handleAction = function handleAction(action, req) {
     case 'search': data = _search(req); break;
     case 'finish': data = _finish(req); break;
     case 'error_finish': data = _errorFinish(req); break;
-
   }
-
   return data;
 };
 
@@ -31,98 +18,70 @@ _welcome = function _welcome(req) {
   return {
     action: 'welcome',
     status: 200,
-    body: req.__('welcome')
-  }
+    body:   req.__('welcome')
+  };
 };
 
 _finish = function _finish(req) {
   return {
     action: 'finish',
     status: 200,
-    body: 'Siamo contenti di averti aiutato a trovare il posto che cercavi'
-  }
+    body:   req.__('finish')
+  };
 };
 
 _errorFinish = function _errorFinish(req) {
   return {
     action: 'error_finish',
     status: 200,
-    body: 'Siamo spiacenti ma non possiamo più aiutarti nella tua ricerca'
-  }
+    body:   req.__('error_finish')
+  };
 };
 
 _unknown = function _unknown(req) {
   return {
     action: 'unknown',
     status: 200,
-    body: req.__('unknown')
-  }
+    body:   req.__('unknown')
+  };
 };
 
 _no = function _no(req) {
   return {
     action: 'no',
     status: 200,
-    body: req.__('got_no')
-  }
+    body:   req.__('got_no')
+  };
 };
 
 _missPoi = function _missPoi(req) {
   return {
     action: 'miss_poi',
     status: 200,
-    body: req.__('miss_poi')
-  }
+    body:   req.__('miss_poi')
+  };
 };
 
 _missPlace = function _missPlace(req) {
   return {
     action: 'miss_place',
     status: 200,
-    body: req.__('miss_place')
-  }
+    body:   req.__('miss_place')
+  };
 };
 
 _forward = function _forward(req) {
   return {
     action: 'forward',
     status: 200,
-    body: req.__('forward')
-  }
+    body:   req.__('forward')
+  };
 };
 
 _search = function _search(req) {
   return {
     action: 'search',
     status: 200,
-    body: 'Ecco i posti che abbiamo trovato. È uno di questi?'
-  }
+    body:   req.__('search')
+  };
 };
-
-_dateTime = function _dateTime(parameters, req) {
-  if(parameters.time && parameters.date)
-    body = req.__('got_datetime', { date: parameters.date, time: parameters.time })
-  else if(parameters.date)
-    body = req.__('got_date', { date: parameters.date })
-  else
-    body = req.__('got_time', { time: parameters.time })
-
-  return {
-    action: 'dateTime',
-    status: 200,
-    body: body
-  }
-};
-
-_place = function _place(parameters, req) {
-  if(parameters.geo_place)
-    body = req.__('got_place', { place: parameters.geo_place })
-  else if(parameters.geo_poi)
-    body = req.__('got_poi', { poi: parameters.geo_poi })
-
-  return {
-    action: 'place',
-    status: 200,
-    body: body
-  }
-}

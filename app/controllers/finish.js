@@ -1,4 +1,4 @@
-exports.finish = function(req, res) {
+exports.show = function(req, res) {
   res.json({
     action: 'finish',
     status: 200,

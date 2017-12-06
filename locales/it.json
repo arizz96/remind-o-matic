@@ -1,5 +1,5 @@
 {
-  "welcome":      "Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un evento di cui non ricordi i particolari. In ogni momento puoi scrivere /help o cliccare il tasto a fianco della chat e ti manderò le istruzioni. Se vuoi ricordarti i dettagli di un evento particolare prova a dirmi quello che ti viene in mente di quel giorno.",
+  "welcome":      "Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un evento di cui non ricordi i particolari. In ogni momento puoi cliccare il tasto in alto e ti manderò le istruzioni. Se vuoi ricordarti i dettagli di un evento particolare prova a dirmi quello che ti viene in mente di quel giorno.",
   "got_datetime": "Quindi era il {{date}} verso le {{time}}, vero?",
   "got_time":     "Quindi era verso le {{time}}, vero?",
   "got_date":     "Quindi era il {{date}}, vero?",
@@ -11,7 +11,9 @@
   "got_poi":      "Quindi ti trovavi vicino a un {{poi}}?",
   "miss_poi":     "Che punto di interesse stai cercando? (bar, pizzeria, cinema, museo, ...)",
   "miss_place":   "Ti ricordi in che città si trova il punto di interesse che stai cercando?",
-  "forward":      "Ok grazie. Ti ricordi qualcosa altro vicino a quel posto?",
+  "forward":      "Ok grazie. Ti ricordi qualcos'altro vicino a quel posto?",
   "help"  :         "Remind-O-Matic ti permette di ricordare alcuni ricordi che davi per dimenticati. Infatti, inserendo un luogo e un punto di interesse ad esso associato, può trovare luoghi che rispettano i dati inseriti. Si potrà in futuro fare delle ricerche sulla base di quello che hanno fatto i propri amici. Il progetto è stato realizzato da: Alessandro Rizzo, Leonardo Dal Ronco, Giulio Pellizzari, Domenico Stefani, Matteo Tadiello, durante il terzo anno di studi all'università di Trento, corso di laurea in informatica.",
-  "finish":       "Bene! Siamo felici di averti aiutato a ricordare!"
+  "finish":       "Bene! Siamo felici di averti aiutato a ricordare!",
+  "error_finish": "Ci dispiace di non essere riusciti ad aiutarti a ricordare!",
+  "search":       "Ecco i posti che abbiamo trovato. È uno di questi?"
 }
