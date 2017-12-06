@@ -85,7 +85,7 @@ exports.ask = function(req, res) {
     console.log(response);
     //var response = ai_response;
     Item.findOne({remindOMaticId: remindOMaticId, type: 'target'}, function(err, item) {
-      console.log(response);
+      console.log(item);
       switch(response.result.action) {
         case "input.place":
         case "input.poi":
@@ -232,44 +232,47 @@ exports.ask = function(req, res) {
           }
           break;
         case 'input.unknown':
-          if(item.confirmed) {
-            res.json(responses.handleAction('unknown', req));
-            res.end();
-          } else {
-            // dirgi che prima deve inserire poi e place
-            res.json(responses.handleAction('error', req));
-            res.end();
-          }
+          res.json(responses.handleAction('unknown', req));
+          res.end();
           break;
         case 'input.no':
           console.log("input no");
-          if(item.confirmed) {
-            User.findOne({_id: remindOMaticId}, function(err, user){
-              console.log(user.status);
-              switch (user.status) {
-                case 'firstForward':
-                  res.json(responses.handleAction('error_finish'));
-                  res.end();
-                  console.log("switch status from " + user.status + " to end")
-                  user.status = 'end';
-                  user.save();
-                  break;
-                  break;
-                case 'forward':
-                  Item.findOne({remindOMaticId: remindOMaticId, type: 'target'}, function(err, item) {
-                    _sendSearch(res, remindOMaticId, null);
-                    console.log("switch status from " + user.status + " to confirmTargetFinal");
-                    user.status = 'confirmTargetFinal';
+          if(item != null){
+            if(item.confirmed) {
+              User.findOne({_id: remindOMaticId}, function(err, user){
+                console.log(user.status);
+                switch (user.status) {
+                  case 'firstForward':
+                    res.json(responses.handleAction('error_finish'));
+                    res.end();
+                    console.log("switch status from " + user.status + " to end")
+                    user.status = 'end';
                     user.save();
-                  });
-                  break;
-              }
-            });
+                    break;
+                    break;
+                  case 'forward':
+                    Item.findOne({remindOMaticId: remindOMaticId, type: 'target'}, function(err, item) {
+                      _sendSearch(res, remindOMaticId, null);
+                      console.log("switch status from " + user.status + " to confirmTargetFinal");
+                      user.status = 'confirmTargetFinal';
+                      user.save();
+                    });
+                    break;
+                }
+              });
+            } else {
+              // dirgi che prima deve inserire poi e place
+              res.json(responses.handleAction('error', req));
+              res.end();
+            }
           } else {
-            // dirgi che prima deve inserire poi e place
-            res.json(responses.handleAction('error', req));
-            res.end();
+              res.json(responses.handleAction('error', req));
+              res.end();
           }
+          break;
+        default:
+          res.json(responses.handleAction('unknown', req));
+          res.end();
           break;
       }
     });
