@@ -1,3 +1,21 @@
+function startSession() {
+  $.ajax({
+    type: 'GET',
+    url: 'api/v1/welcome',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    success: function (data) {
+        // console.log(data.action);
+        writeMessage(data.body, 'left');
+      }
+  });
+  document.getElementsByClassName("message_input")[0].focus();
+  // console.log("setted focus");
+}
+
+
+
+
 var Message;
 Message = function (arg) {
     this.text = arg.text, this.message_side = arg.message_side;
@@ -18,9 +36,9 @@ Message = function (arg) {
 function writeMessage (text, side) {
   // alert("writing message " + text);
   var $messages, message;
-  if (text.trim() === '') {
-      return;
-  }
+  // if (text.trim() === '') {
+  //     return;
+  // }
   //$('.message_input').val('');
   $messages = $('.messages');
   message_side = side;
@@ -34,26 +52,94 @@ function writeMessage (text, side) {
   // return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function readRequest(){
+function readRequest(){
   // alert("inizio read");
   // writeMessage('response', 'left');
   // alert("stampato response");
   message_input = document.getElementsByClassName("message_input")[0];
   if(message_input.value != ''){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
-    console.log(message_input.value);
+    // console.log(message_input.value);
     writeMessage(message_input.value, 'right');
+    var info = { "text" : message_input.value };
+    // console.log(info);
+
+    $.ajax({
+      type: 'POST',
+      url: 'api/v1/ask',
+      acceptedLanguage: 'it',
+      contentType: 'application/json',
+      data: JSON.stringify(info),
+      success: function (data) {
+          // use data
+          // console.log(data.action);
+          switch(data.action){
+            case 'search':
+              // writeMessage(data.body, 'left');
+              // console.log(data);
+              // console.log(data.nearbyResults);
+              var tmp = data.body + '<br />';
+              if(data.nearbyResults.length > 0){
+                for(i = 0; i < data.nearbyResults.length; i++)
+                  tmp += '<button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>, ' + _sanitizeString(data.nearbyResults[i].address) + ' </button><br />';
+                tmp += '<button onclick="clickError()">Nessuno di questi</button><br />'
+                writeMessage(tmp, 'left');
+              } else {
+              //   writeMessage(data.body, 'left');
+              }
+              break;
+              default: writeMessage(data.body, 'left');
+          }
+
+        }
+    });
     message_input.value = '';
-    await sleep(1000);
-    writeMessage('response', 'left');
+
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
+  document.getElementsByClassName("message_input")[0].focus();
 }
 
+function _sanitizeString(str){
+    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+    return str.trim();
+}
+
+function clickPOI(coords, name) {
+  document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
+  writeMessage(name, 'right');
+  $.ajax({
+    type: 'POST',
+    url: 'api/v1/push',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    data: JSON.stringify({ type: 'poi', 'coords': coords, 'name': name}),
+    success: function (data) {
+      writeMessage(data.body, 'left');
+    }
+  });
+  document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
+  document.getElementsByClassName("message_input")[0].focus();
+}
+
+function clickError() {
+  document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
+  writeMessage("Nessuno di questi", 'right');
+  // console.log("entrato in error");
+  $.ajax({
+    type: 'POST',
+    url: 'api/v1/push',
+    acceptedLanguage: 'it',
+    contentType: 'application/json',
+    data: JSON.stringify({ type: 'error'}),
+    success: function (data) {
+      // console.log(data);
+      writeMessage(data.body, 'left');
+    }
+  });
+  document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
+  document.getElementsByClassName("message_input")[0].focus();
+}
 
 function checkSend(e){
   if (e.keyCode == 13 && document.getElementsByClassName("message_input")[0].value != "")
