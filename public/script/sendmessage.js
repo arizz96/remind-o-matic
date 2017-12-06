@@ -81,7 +81,7 @@ function readRequest(){
               var tmp = data.body + '<br />';
               if(data.nearbyResults.length > 0){
                 for(i = 0; i < data.nearbyResults.length; i++)
-                  tmp += '<button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + data.nearbyResults[i].name +'\')"><b>' + data.nearbyResults[i].name + '</b>, ' + data.nearbyResults[i].address + ' </button><br />';
+                  tmp += '<button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>, ' + _sanitizeString(data.nearbyResults[i].address) + ' </button><br />';
                 tmp += '<button onclick="clickError()">Nessuno di questi</button><br />'
                 writeMessage(tmp, 'left');
               } else {
@@ -98,6 +98,11 @@ function readRequest(){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
   document.getElementsByClassName("message_input")[0].focus();
+}
+
+function _sanitizeString(str){
+    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+    return str.trim();
 }
 
 function clickPOI(coords, name) {
