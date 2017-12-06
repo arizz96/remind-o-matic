@@ -83,6 +83,21 @@ body {
   bottom: 0;
 }
 
+.poi-footer{
+  background-color: var(--c5);
+  height: 8%;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  bottom: 0;
+  text-align: center;
+}
+
 .middle-column{
     float: none;
     display: table-cell;

@@ -73,22 +73,16 @@
     </div>
 
     <footer class="row my-footer">
-      <div id='text_input_div'>
-        <div class="col-10 col-md-11 message_input_wrapper">
+        <div id='text_input_div' class="col-10 col-md-11 message_input_wrapper">
           <input class="message_input" placeholder="Cosa vuoi chiedermi?" onkeydown="checkSend(event)"/>
         </div>
 
-        <div class="btn col-2 col-md-1 send_message" onclick="readRequest()">
+        <button id='button_send' class="btn col-2 col-md-1 send_message" onclick="readRequest()">
           <div class="text">Invia</div>
-        </div>
-      </div>
-      <div id='button_input_div'>
-      </div>
-
-
-      <!-- <button class="btn col-2 col-md-1 send_message" onclick="readRequest()">
-        <div class="text">Invia</div>
-      </button> -->
+        </button>
     </footer>
+
+    <div id='button_poi_div' class="row poi-footer"></div>
+
   </body>
 </html>

@@ -9,7 +9,7 @@ function startSession() {
         writeMessage(data.body, 'left');
       }
   });
-  document.getElementById('button_input_div').style.visibility = 'hidden';
+  _showTextInput(true);
   document.getElementsByClassName("message_input")[0].focus();
   // console.log("setted focus");
 }
@@ -102,19 +102,30 @@ function readRequest(){
   document.getElementsByClassName("message_input")[0].focus();
 }
 
+function _showTextInput(flag) {
+  if(flag) {
+    document.getElementById('button_poi_div').innerHTML = '';
+    document.getElementById('button_poi_div').style.visibility = 'hidden';
+    document.getElementById('text_input_div').style.visibility = 'visible';
+    document.getElementById('button_send').style.visibility = 'visible';
+
+  } else {
+    document.getElementById('button_poi_div').style.visibility = 'visible';
+    document.getElementById('text_input_div').style.visibility = 'hidden';
+    document.getElementById('button_send').style.visibility = 'hidden';
+  }
+}
+
 function _formatButton(data) {
   tmp = '';
-  text_input_div = document.getElementById('text_input_div');
-  button_input_div = document.getElementById('button_input_div');
+  button_input_div = document.getElementById('button_poi_div');
   for(i = 0; i < data.nearbyResults.length; i++) {
     tmp += '- <b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>,' +  _sanitizeString(data.nearbyResults[i].address) + '<br />';
-    button_input_div.innerHTML += '<div class="send_message" onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(data.nearbyResults[i].name)+ '</div></div>'
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(data.nearbyResults[i].name)+ '</div></div>'
   }
 
-  button_input_div.innerHTML += '<div class="send_message" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
-  text_input_div.style.visibility = 'hidden';
-  button_input_div.style.visibility = 'visible';
-  console.log(button_input_div.style.visibility);
+  button_input_div.innerHTML += '<button class="send_poi" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
+  _showTextInput(false);
   return tmp;
 }
 
@@ -124,9 +135,7 @@ function _sanitizeString(str){
 }
 
 function clickPOI(coords, name) {
-  document.getElementById('button_input_div').innerHTML = '';
-  document.getElementById('button_input_div').style.visibility = 'hidden';
-  document.getElementById('text_input_div').style.visibility = 'visible';
+  _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage(name, 'right');
   $.ajax({
@@ -144,9 +153,7 @@ function clickPOI(coords, name) {
 }
 
 function clickError() {
-  document.getElementById('button_input_div').innerHTML = '';
-  document.getElementById('button_input_div').style.visibility = 'hidden';
-  document.getElementById('text_input_div').style.visibility = 'visible';
+  _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage("Nessuno di questi", 'right');
   // console.log("entrato in error");
