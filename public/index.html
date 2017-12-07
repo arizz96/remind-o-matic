@@ -59,14 +59,16 @@
 
 
     <footer class="row my-footer">
-      <div class="col-10 col-md-11 message_input_wrapper">
-        <input class="message_input" placeholder="Cosa vuoi chiedermi?" onkeydown="checkSend(event)"/>
-      </div>
+        <div id='text_input_div' class="col-10 col-md-11 message_input_wrapper">
+          <input class="message_input" placeholder="Cosa vuoi chiedermi?" onkeydown="checkSend(event)"/>
+        </div>
 
-      <button class="btn col-2 col-md-1 send_message" onclick="readRequest()">
-        <div class="text">Invia</div>
-      </button>
+        <button id='button_send' class="btn col-2 col-md-1 send_message" onclick="readRequest()">
+          <div class="text">Invia</div>
+        </button>
     </footer>
+
+    <div id='button_poi_div' class="row poi-footer"></div>
 
     <!-- Popup di Aiuto/Info -->
     <div id="popup" class="overlay">
@@ -83,6 +85,7 @@
     	</div>
     </div>
     <!--Fine del popup  -->
+
 
   </body>
 </html>
