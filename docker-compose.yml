@@ -5,7 +5,7 @@ services:
     restart: always
     build: .
     ports:
-      - "8080:8080"
+      - "8080:3000"
     links:
       - mongo
     env_file: .env
