@@ -75,20 +75,20 @@ function readRequest(){
           // console.log(data.action);
           switch(data.action){
             case 'search':
-              // writeMessage(data.body, 'left');
-              // console.log(data);
-              // console.log(data.nearbyResults);
+              // wrnsole.log(data.nearbyResults);
               var tmp = data.body + '<br />';
-              if(data.nearbyResults.length > 0){
-                for(i = 0; i < data.nearbyResults.length; i++)
-                  tmp += '<button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>, ' + _sanitizeString(data.nearbyResults[i].address) + ' </button><br />';
-                tmp += '<button onclick="clickError()">Nessuno di questi</button><br />'
+              if(data.nearbyResults.length > 0) {
+                tmp = _formatButton(data);
+                tmp += '- Nessuno di questi<br />'
                 writeMessage(tmp, 'left');
-              } else {
-              //   writeMessage(data.body, 'left');
               }
               break;
-              default: writeMessage(data.body, 'left');
+            case 'finish':
+            case 'error_finish':
+              writeMessage(data.body, 'left');
+              writeInfo('Grazie', data.body, 'index.html');
+              break;
+            default: writeMessage(data.body, 'left');
           }
 
         }

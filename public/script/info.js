@@ -6,15 +6,17 @@ function getInfo() {
       contentType: 'application/json',
       data: '',
       success: function (data) {
-          writeInfo(data.body);
+          writeInfo('Aiuto', data.body, 'info.html');
       }
     });
 }
 
-function writeInfo(text) {
+function writeInfo(title, text, next) {
+    document.getElementById('popupTitle').innerHTML = title;
     var para = document.createElement("P");
     var t = document.createTextNode(text);
     para.appendChild(t);
     // document.getElementById("infobox").innerHTML = "Hello World";
     document.getElementById("infobox").appendChild(para);
+    document.getElementById('nextButton').onClick = "location.href=" + next;
 }
