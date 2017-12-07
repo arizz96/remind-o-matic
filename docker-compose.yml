@@ -2,8 +2,7 @@ version: "2"
 services:
   app:
     container_name: app
-    restart: always
-    build: .
+    image: arizz96/remind-o-matic
     ports:
       - "8080:3000"
     links:
