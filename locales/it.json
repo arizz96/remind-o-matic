@@ -1,5 +1,5 @@
 {
-  "welcome":      "Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un evento di cui non ricordi i particolari. In ogni momento puoi cliccare il tasto in alto e ti manderò le istruzioni. Se vuoi ricordarti i dettagli di un evento particolare prova a dirmi quello che ti viene in mente di quel giorno.",
+  "welcome":      "Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un luogo di cui non ricordi i particolari.  Puoi iniziare dicendomi un punto di interesse oppure il nome della città in questione.<br/><br/>Ad esempio, scrivendo \"Ero in un bar a Milano\", farò delle proposte, sulle quali poi potrai affinare la ricerca dicendomi, i luoghi vicini.",
   "got_datetime": "Quindi era il {{date}} verso le {{time}}, vero?",
   "got_time":     "Quindi era verso le {{time}}, vero?",
   "got_date":     "Quindi era il {{date}}, vero?",
