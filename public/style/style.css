@@ -17,12 +17,14 @@ body {
   height : 50px;
   width :auto;
   margin-top: -7px;
+  float: left;
 }
 
 #info{
   height : 50px;
   width :auto;
   margin-top: -7px;
+  float: right;
 }
 
 #h-title{
@@ -106,38 +108,30 @@ body {
 
 .info-container{
   background-color: var(--c4);
-  min-height:80%;
+  height:90%;
+  overflow-y: auto;
   position:fixed;
   top:10%;
-  bottom:10%;
-  overflow-y: scroll;
-  width: 100%;
-  width: -webkit-fill-available; /*Chrome*/
-  width: -moz-available; /*Firefox*/
 }
 
 .info-box{
   color: var(--c1);
   background-color: var(--c5);
-  margin-top: 70px;
+  margin-top: 10px;
   margin-bottom: 10px;
   padding: 20px;
-  display: inline-block;
   border-radius: 6px;
-  width: 100%;
-  min-width: 100px;
   position: relative;
 }
 
 .info-home-button{
   color: var(--c1);
   background-color: var(--c5);
+  text-align: center;
   padding: 20px;
-  display: inline-block;
   border-radius: 6px;
-  width: 100%;
-  min-width: 100px;
   position: relative;
+  margin-bottom: 10px;
 }
 
 .info-home-button:hover{
@@ -145,14 +139,11 @@ body {
     background-color: var(--c1);
 }
 
-.my-info-footer{
-  background-color: var(--c1);
-  height: 10%;
-  position: fixed;
-  width: 100%;
-  padding-right: 10px;
-  padding-left: 10px;
-  margin-left: auto;
-  margin-right: auto;
-  bottom: 0;
-}
+
+/*@media screen and (maz-width: 480px) {
+  #h-title{
+    font-size : 50%;
+    color: var(--c4);
+    vertical-align: middle;
+  }
+}*/

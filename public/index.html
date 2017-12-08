@@ -71,17 +71,16 @@
     <div id='button_poi_div' class="row poi-footer"></div>
 
     <!-- Popup di Aiuto/Info -->
-    <div id="popup" class="overlay">
-    	<div class="popup">
+    <div id="popup" class="row overlay justify-content-center"> <!-- id popup per target-->
+    	<div class="col-lg-6 col-md-6 col-8 popup middle-column">                <!--class popup per stile-->
     		<h2 id='popupTitle'>Aiuto</h2>
-    		<a class="close" href="#">&times;</a>
+    		<a id="popupClose" href="index.html#">&times;</a>
     		<div class="content">
           <div id="infobox">
             <!-- info.js scrive le info ottenute dalle API dentro a questo div -->
           </div>
     		</div>
-
-        <button id='nextButton' class="btn btn-primary my-info-button" onClick="location.href='info.html'">Più informazioni</button>
+        <button id='nextButton' class="btn my-info-button" onClick="location.href='info.html'">Più informazioni</button>
     	</div>
     </div>
     <!--Fine del popup  -->

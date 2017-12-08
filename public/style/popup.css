@@ -1,48 +1,47 @@
 .my-info-button {
   background-color: var(--c3);
-  border-color: var(--c3);
+  border-color: var(--c2);
   color: var(--black);
 }
 
 .my-info-button:hover{
   background-color: var(--c2);
-  border-color: var(--c2);
+  border-color: var(--c3);
   color: var(--white);
 }
 
 .overlay {
   position: fixed;
-  top: 0;
+  top: 10%;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 10, 0.6);
   transition: opacity 500ms;
   visibility: hidden;
   opacity: 0;
 }
+
 .overlay:target {
   visibility: visible;
   opacity: 1;
 }
 
 .popup {
-  color = var(--c1);
-  margin: 70px auto;
+  color : var(--c1);
+  margin-top: 10px;
+  margin-bottom: auto;
   padding: 20px;
-  background: #fff;
-  border-radius: 5px;
-  width: 30%;
-  position: relative;
-  transition: all 5s ease-in-out;
+  background: var(--c5);
+  border-radius: 6px;
 }
 
-.popup h2 {
-  margin-top: 0;
+#popupTitle{
+  margin-top: 10px;
   color: var(--c1);
   font-family: Tahoma, Arial, sans-serif;
 }
-.popup .close {
+#popupClose {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -52,19 +51,6 @@
   text-decoration: none;
   color: var(--c1);
 }
-.popup .close:hover {
+#popupClose:hover {
   color: var(--c3);
-}
-.popup .content {
-  max-height: 30%;
-  overflow: auto;
-}
-
-@media screen and (max-width: 700px){
-  .box{
-    width: 70%;
-  }
-  .popup{
-    width: 70%;
-  }
 }
