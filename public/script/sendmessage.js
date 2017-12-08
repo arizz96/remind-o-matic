@@ -5,17 +5,12 @@ function startSession() {
     acceptedLanguage: 'it',
     contentType: 'application/json',
     success: function (data) {
-        // console.log(data.action);
         writeMessage(data.body, 'left');
       }
   });
   _showTextInput(true);
   document.getElementsByClassName("message_input")[0].focus();
-  // console.log("setted focus");
 }
-
-
-
 
 var Message;
 Message = function (arg) {
@@ -35,12 +30,7 @@ Message = function (arg) {
 };
 
 function writeMessage (text, side) {
-  // alert("writing message " + text);
   var $messages, message;
-  // if (text.trim() === '') {
-  //     return;
-  // }
-  //$('.message_input').val('');
   $messages = $('.messages');
   message_side = side;
   message = new Message({
@@ -50,21 +40,16 @@ function writeMessage (text, side) {
   message.draw();
   var elem = document.getElementById('chat_body');
   elem.scrollTop = elem.scrollHeight;
-  // return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
+var nearByData = {};
+
 function readRequest(){
-  // alert("inizio read");
-  // writeMessage('response', 'left');
-  // alert("stampato response");
   message_input = document.getElementsByClassName("message_input")[0];
   if(message_input.value != ''){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
-    // console.log(message_input.value);
     writeMessage(message_input.value, 'right');
     var info = { "text" : message_input.value };
-    // console.log(info);
-
     $.ajax({
       type: 'POST',
       url: 'api/v1/ask',
@@ -72,31 +57,20 @@ function readRequest(){
       contentType: 'application/json',
       data: JSON.stringify(info),
       success: function (data) {
-          // use data
-          // console.log(data.action);
           switch(data.action){
             case 'search':
-              // writeMessage(data.body, 'left');
-              // console.log(data);
-              // console.log(data.nearbyResults);
-              var tmp = data.body + '<br />';
-              if(data.nearbyResults.length > 0){
-                // for(i = 0; i < data.nearbyResults.length; i++)
-                  // tmp += '<button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>, ' + _sanitizeString(data.nearbyResults[i].address) + ' </button><br />';
-                tmp = _formatButton(data);
-                tmp += '- Nessuno di questi<br />'
-                writeMessage(tmp, 'left');
-              } else {
-              //   writeMessage(data.body, 'left');
-              }
+              // if(data.nearbyResults.length > 0)
+              nearByData = data;
+              if(data.nearbyResults.length > 5)
+                _formatFirstButton(data);
+              else
+                _formatMoreButton(true);
               break;
               default: writeMessage(data.body, 'left');
           }
-
         }
     });
     message_input.value = '';
-
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
   document.getElementsByClassName("message_input")[0].focus();
@@ -108,7 +82,6 @@ function _showTextInput(flag) {
     document.getElementById('button_poi_div').style.visibility = 'hidden';
     document.getElementById('text_input_div').style.visibility = 'visible';
     document.getElementById('button_send').style.visibility = 'visible';
-
   } else {
     document.getElementById('button_poi_div').style.visibility = 'visible';
     document.getElementById('text_input_div').style.visibility = 'hidden';
@@ -116,21 +89,39 @@ function _showTextInput(flag) {
   }
 }
 
-function _formatButton(data) {
-  tmp = '';
+function _formatMoreButton(first) {
+  tmp = nearByData.body + '<br />';
   button_input_div = document.getElementById('button_poi_div');
-  for(i = 0; i < data.nearbyResults.length; i++) {
-    tmp += '- <b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>,' +  _sanitizeString(data.nearbyResults[i].address) + '<br />';
-    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(data.nearbyResults[i].name)+ '</div></div>'
+  button_input_div.innerHTML = '';
+  for(i = (first?0 : 5); i < nearByData.nearbyResults.length; i++) {
+    tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
   }
 
   button_input_div.innerHTML += '<button class="send_poi" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
-  _showTextInput(false);
-  return tmp;
+  tmp += '- Nessuno di questi<br />';
+  writeMessage(tmp, 'left');
 }
 
-function _sanitizeString(str){
-    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+function _formatFirstButton() {
+  tmp = nearByData.body + '<br />';
+  button_input_div = document.getElementById('button_poi_div');
+  for(i = 0; i < 5; i++) {
+    tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
+  }
+  button_input_div.innerHTML += '<button class="send_poi" onclick="more()"><div class="text">More...</div></div>';
+  _showTextInput(false);
+  writeMessage(tmp, 'left');
+}
+
+function more() {
+  writeMessage('Vorrei visualizzarne altri', 'right');
+  _formatMoreButton(false);
+}
+
+function _sanitizeString(str) {
+    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim," ");
     return str.trim();
 }
 
@@ -156,7 +147,6 @@ function clickError() {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage("Nessuno di questi", 'right');
-  // console.log("entrato in error");
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -164,7 +154,6 @@ function clickError() {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'error'}),
     success: function (data) {
-      // console.log(data);
       writeMessage(data.body, 'left');
     }
   });
