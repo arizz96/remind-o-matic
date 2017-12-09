@@ -59,14 +59,29 @@ function readRequest(){
       success: function (data) {
           switch(data.action){
             case 'search':
-              // if(data.nearbyResults.length > 0)
-              nearByData = data;
-              if(data.nearbyResults.length > 5)
-                _formatFirstButton(data);
-              else
-                _formatMoreButton(true);
+              if(data.nearbyResults.length > 0) {
+                nearByData = data;
+                if(data.nearbyResults.length > 5)
+                  _formatFirstButton(data);
+                else
+                  _formatMoreButton(true);
+
+              } else {
+                $.ajax({
+                  type: 'POST',
+                  url: 'api/v1/push',
+                  acceptedLanguage: 'it',
+                  contentType: 'application/json',
+                  data: JSON.stringify({ type: 'error'}),
+                  success: function (data) {
+                    writeMessage("Non è stato trovato nessun posto del tipo cercato. Ricordi qualcosa altro?", 'left');
+                  }
+                });
+                document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
+                document.getElementsByClassName("message_input")[0].focus();
+              }
               break;
-              default: writeMessage(data.body, 'left');
+            default: writeMessage(data.body, 'left');
           }
         }
     });
@@ -97,9 +112,12 @@ function _formatMoreButton(first) {
     tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
     button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
   }
-
+  if(first)
+    _showTextInput(false);
   button_input_div.innerHTML += '<button class="send_poi" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
   tmp += '- Nessuno di questi<br />';
+  if(first)
+    _showTextInput(false);
   writeMessage(tmp, 'left');
 }
 
