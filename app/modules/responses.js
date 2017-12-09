@@ -10,6 +10,7 @@ exports.handleAction = function handleAction(action, req) {
     case 'search': data = _search(req); break;
     case 'finish': data = _finish(req); break;
     case 'error_finish': data = _errorFinish(req); break;
+    case 'server_error': data = _serverError(req); break;
   }
   return data;
 };
@@ -35,6 +36,14 @@ _errorFinish = function _errorFinish(req) {
     action: 'error_finish',
     status: 200,
     body:   req.__('error_finish')
+  };
+};
+
+_serverError = function _serverError(req) {
+  return {
+    action: 'server_error',
+    status: 500,
+    body:   req.__('server_error')
   };
 };
 
