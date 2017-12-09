@@ -66,7 +66,17 @@ function readRequest(){
               else
                 _formatMoreButton(true);
               break;
-              default: writeMessage(data.body, 'left');
+            case 'finish':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
+              break;
+            case 'error_finish':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+              break;
+            default: writeMessage(data.body, 'left');
           }
         }
     });
@@ -136,7 +146,19 @@ function clickPOI(coords, name) {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'poi', 'coords': coords, 'name': name}),
     success: function (data) {
-      writeMessage(data.body, 'left');
+      switch(data.action){
+        case 'finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        default: writeMessage(data.body, 'left');
+      }
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
@@ -154,7 +176,19 @@ function clickError() {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'error'}),
     success: function (data) {
-      writeMessage(data.body, 'left');
+      switch(data.action){
+        case 'finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        default: writeMessage(data.body, 'left');
+      }
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
