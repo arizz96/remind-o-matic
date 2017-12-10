@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
   <head>
     <title>Remind-O-Matic</title>
     <!-- Required meta tags -->
@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/chat.css">
     <link rel="stylesheet" href="./style/popup.css">
+    <link rel="stylesheet" href="./style/spinner.css">
     <script
       src="https://code.jquery.com/jquery-3.2.1.js"
       integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
@@ -28,6 +29,11 @@
     <header class="row my-header justify-content-center fixed-top">
         <div class="col-2">
           <img id="ico" src="./img/Ico-RemindOMatic.png" onclick="location.href='index.html'" alt="ico">
+          <div id="spinner" class="spinner">
+            <div class="bounce1"></div>
+            <div class="bounce2"></div>
+            <div class="bounce3"></div>
+          </div>
         </div>
         <div class="col-8 middle-column">
           <h1 id="h-title" class="text-center">Remind-O-Matic</h1>
@@ -43,17 +49,18 @@
           <ul class="messages">
           </ul>
       </div>
-
-
-
-    <div class="message_template">
-      <li class="message">
-        <div class="text_wrapper">
-          <div class="text"></div>
-        </div>
-      </li>
-    </div>
-
+      <div class="message_template">
+        <li class="message">
+          <div class="text_wrapper">
+            <div class="text"></div>
+          </div>
+        </li>
+      </div>
+      <!-- <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div> -->
     </div>
 
 

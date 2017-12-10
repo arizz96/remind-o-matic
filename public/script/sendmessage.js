@@ -1,4 +1,5 @@
 function startSession() {
+  _showSpinner(false);
   $.ajax({
     type: 'GET',
     url: 'api/v1/welcome',
@@ -50,6 +51,7 @@ function readRequest(){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
     writeMessage(message_input.value, 'right');
     var info = { "text" : message_input.value };
+    _showSpinner(true);
     $.ajax({
       type: 'POST',
       url: 'api/v1/ask',
@@ -57,14 +59,30 @@ function readRequest(){
       contentType: 'application/json',
       data: JSON.stringify(info),
       success: function (data) {
+          _showSpinner(false);
           switch(data.action){
             case 'search':
-              // if(data.nearbyResults.length > 0)
-              nearByData = data;
-              if(data.nearbyResults.length > 5)
-                _formatFirstButton(data);
-              else
-                _formatMoreButton(true);
+              if(data.nearbyResults.length > 0) {
+                nearByData = data;
+                if(data.nearbyResults.length > 5)
+                  _formatFirstButton(data);
+                else
+                  _formatMoreButton(true);
+
+              } else {
+                $.ajax({
+                  type: 'POST',
+                  url: 'api/v1/push',
+                  acceptedLanguage: 'it',
+                  contentType: 'application/json',
+                  data: JSON.stringify({ type: 'error'}),
+                  success: function (data) {
+                    writeMessage("Non è stato trovato nessun posto del tipo cercato. Ricordi qualcosa altro?", 'left');
+                  }
+                });
+                document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
+                document.getElementsByClassName("message_input")[0].focus();
+              }
               break;
             case 'finish':
               writeMessage(data.body, 'left');
@@ -72,6 +90,11 @@ function readRequest(){
               writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
               break;
             case 'error_finish':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+              break;
+            case 'server_error':
               writeMessage(data.body, 'left');
               location.href='#popup';
               writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
@@ -86,8 +109,8 @@ function readRequest(){
   document.getElementsByClassName("message_input")[0].focus();
 }
 
-function _showTextInput(flag) {
-  if(flag) {
+function _showTextInput(value) {
+  if(value) {
     document.getElementById('button_poi_div').innerHTML = '';
     document.getElementById('button_poi_div').style.visibility = 'hidden';
     document.getElementById('text_input_div').style.visibility = 'visible';
@@ -99,6 +122,13 @@ function _showTextInput(flag) {
   }
 }
 
+function _showSpinner(value) {
+  if(value)
+    document.getElementById('spinner').style.visibility = 'visible';
+  else
+    document.getElementById('spinner').style.visibility = 'hidden';
+}
+
 function _formatMoreButton(first) {
   tmp = nearByData.body + '<br />';
   button_input_div = document.getElementById('button_poi_div');
@@ -107,9 +137,12 @@ function _formatMoreButton(first) {
     tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
     button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
   }
-
+  if(first)
+    _showTextInput(false);
   button_input_div.innerHTML += '<button class="send_poi" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
   tmp += '- Nessuno di questi<br />';
+  if(first)
+    _showTextInput(false);
   writeMessage(tmp, 'left');
 }
 
@@ -118,9 +151,9 @@ function _formatFirstButton() {
   button_input_div = document.getElementById('button_poi_div');
   for(i = 0; i < 5; i++) {
     tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
-    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _cut(_sanitizeString(nearByData.nearbyResults[i].name))+ '</div></div>'
   }
-  button_input_div.innerHTML += '<button class="send_poi" onclick="more()"><div class="text">More...</div></div>';
+  button_input_div.innerHTML += '<button class="send_poi" onclick="more()"><div class="text">More</div></div>';
   _showTextInput(false);
   writeMessage(tmp, 'left');
 }
@@ -128,6 +161,13 @@ function _formatFirstButton() {
 function more() {
   writeMessage('Vorrei visualizzarne altri', 'right');
   _formatMoreButton(false);
+}
+
+function _cut(s) {
+  res = s.substring(0, 20);
+  if(s.length > 20)
+    res += "...";
+  return res;
 }
 
 function _sanitizeString(str) {
@@ -139,6 +179,7 @@ function clickPOI(coords, name) {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage(name, 'right');
+  _showSpinner(true);
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -146,6 +187,7 @@ function clickPOI(coords, name) {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'poi', 'coords': coords, 'name': name}),
     success: function (data) {
+      _showSpinner(false);
       switch(data.action){
         case 'finish':
           writeMessage(data.body, 'left');
@@ -153,6 +195,11 @@ function clickPOI(coords, name) {
           writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
           break;
         case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'server_error':
           writeMessage(data.body, 'left');
           location.href='#popup';
           writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
@@ -169,6 +216,7 @@ function clickError() {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage("Nessuno di questi", 'right');
+  _showSpinner(true);
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -176,6 +224,7 @@ function clickError() {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'error'}),
     success: function (data) {
+      _showSpinner(false);
       switch(data.action){
         case 'finish':
           writeMessage(data.body, 'left');
@@ -183,6 +232,11 @@ function clickError() {
           writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
           break;
         case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'server_error':
           writeMessage(data.body, 'left');
           location.href='#popup';
           writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
