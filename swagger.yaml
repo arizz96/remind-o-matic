@@ -1,0 +1,97 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: "Remind-o-matic"
+  description: Remind-o-matic API
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: foo@example.com
+    url: http://madskristensen.net
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+host: petstore.swagger.io
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /welcome:
+    get:
+      description: |
+        Returns a welcome message
+      operationId: welcome
+      responses:
+        200:
+          description: remind-o-matic welcome
+          schema:
+            $ref: '#/definitions/Text'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /info:
+    get:
+      description: |
+        Returns a info message.
+        
+      operationId: info
+      
+      responses:
+        200:
+          description: remind-o-matic info
+          schema:
+            $ref: '#/definitions/Text'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    
+  /ask:
+    post:
+      description: |
+        Ask a question to the bot
+      operationId: addPet
+      parameters:
+        - name: text
+          in: body
+          description: Question to ask to the bot
+          required: true
+          schema:
+            $ref: '#/definitions/Text'
+      responses:
+        200:
+          description: answer
+          schema:
+            $ref: '#/definitions/Text'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+
+definitions:
+  Text:
+    allOf:
+      - $ref: '#/definitions/Text'
+      - required:
+        - text
+        properties:
+          text:
+            type: string
+  
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
