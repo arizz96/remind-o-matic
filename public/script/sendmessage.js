@@ -91,6 +91,11 @@ function readRequest(){
               location.href='#popup';
               writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
               break;
+            case 'server_error':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+              break;
             default: writeMessage(data.body, 'left');
           }
         }
@@ -175,6 +180,11 @@ function clickPOI(coords, name) {
           location.href='#popup';
           writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
           break;
+        case 'server_error':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
         default: writeMessage(data.body, 'left');
       }
     }
@@ -201,6 +211,11 @@ function clickError() {
           writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
           break;
         case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'server_error':
           writeMessage(data.body, 'left');
           location.href='#popup';
           writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');

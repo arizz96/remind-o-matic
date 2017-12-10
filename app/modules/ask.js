@@ -24,8 +24,17 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
           placesearch.sendSingleSearch(res, item);
           User.findOne({ _id: remindOMaticId }, function(err, user) {
             user.status = 'confirmTargetFirst';
-            user.save();
+            user.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });;
           });
+          break;
+        default:
+          res.json(responses.handleAction('unknown', req));
+          res.end();
           break;
       }
     } else {
@@ -40,7 +49,12 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
             item.geo_place = apiAiResponse.result.parameters.geo_place;
             if(item.geo_place && item.geo_poi)
               item.confirmed = true;
-            item.save();
+            item.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });
             if(!item.confirmed) {
               res.json(responses.handleAction('miss_poi', req));
               res.end();
@@ -55,7 +69,12 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
             item.geo_poi = apiAiResponse.result.parameters.geo_poi;
             if(item.geo_place && item.geo_poi)
               item.confirmed = true;
-            item.save();
+            item.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });
             if(!item.confirmed) {
               res.json(responses.handleAction('miss_place',req));
               res.end();
@@ -72,7 +91,12 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
 
             if(item.geo_place && item.geo_poi)
               item.confirmed = true;
-            item.save();
+            item.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });
             if(!item.confirmed) {
               if(item.geo_place != null)
                 res.json(responses.handleAction('miss_poi', req));
@@ -97,7 +121,12 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
           case 'first':
             placesearch.sendSingleSearch(res, item);
             user.status = 'confirmTargetFirst';
-            user.save();
+            user.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });
             break;
           case 'firstForward':
           case 'forward':
@@ -112,7 +141,12 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
               }
             });
             user.status = 'confirmNear';
-            user.save();
+            user.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });
             break;
         }
       });
@@ -130,14 +164,24 @@ exports.no = function(remindOMaticId, req, res, apiAiResponse, item) {
             res.json(responses.handleAction('error_finish', req));
             res.end();
             user.status = 'end';
-            user.save();
+            user.save()
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
+            });
             break;
           case 'forward':
             Item.findOne({ remindOMaticId: remindOMaticId, type: 'target' })
             .then(function(item) {
               placesearch.sendSearch(res, remindOMaticId, null);
               user.status = 'confirmTargetFinal';
-              user.save();
+              user.save()
+              .catch(function(error){
+                console.log(error);
+                res.json(responses.handleAction('server_error', req));
+                res.end();
+              });
             });
             break;
         }
