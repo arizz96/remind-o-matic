@@ -12,8 +12,8 @@ exports.ask = function(req, res) {
 
   request.on('response', function(response) {
     // check basic information
-    Item.findOne({ remindOMaticId: remindOMaticId, type: 'target' })
-    .then(function(item) {
+    //var apiAiResponse = response;
+    Item.findOne({ remindOMaticId: remindOMaticId, type: 'target' }, function(err, item) {
       switch(response.result.action) {
         case "input.place":
         case "input.poi":
@@ -28,12 +28,12 @@ exports.ask = function(req, res) {
           res.end();
           break;
         }
-    })
-    .catch(function(error){
-      console.log(error);
-      res.json(responses.handleAction('server_error', req));
-      res.end();
     });
+    // .catch(function(error){
+    //   console.log(error);
+    //   res.json(responses.handleAction('server_error', req));
+    //   res.end();
+    // });
   });
 
   request.on('error', function(error) {

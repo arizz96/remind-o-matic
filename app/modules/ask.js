@@ -24,7 +24,6 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
           placesearch.sendSingleSearch(res, item);
           User.findOne({ _id: remindOMaticId })
           .then(function(user) {
-            console.log(err);
             user.status = 'confirmTargetFirst';
             user.save()
             .catch(function(error){
