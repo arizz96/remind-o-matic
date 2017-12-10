@@ -12,7 +12,6 @@ exports.ask = function(req, res) {
 
   request.on('response', function(response) {
     // check basic information
-    //var apiAiResponse = response;
     Item.findOne({ remindOMaticId: remindOMaticId, type: 'target' }, function(err, item) {
       switch(response.result.action) {
         case "input.place":
@@ -29,12 +28,6 @@ exports.ask = function(req, res) {
           break;
         }
     });
-    // .catch(function(error){
-    //   console.log(error);
-    //   res.json(responses.handleAction('server_error', req));
-    //   res.end();
-    // });
-  });
 
   request.on('error', function(error) {
     console.log(error);
