@@ -22,14 +22,21 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
           item.geo_poi        = apiAiResponse.result.parameters.geo_poi;
           item.geo_place      = apiAiResponse.result.parameters.geo_place;
           placesearch.sendSingleSearch(res, item);
-          User.findOne({ _id: remindOMaticId }, function(err, user) {
+          User.findOne({ _id: remindOMaticId })
+          .then(function(user) {
+            console.log(err);
             user.status = 'confirmTargetFirst';
             user.save()
             .catch(function(error){
               console.log(error);
               res.json(responses.handleAction('server_error', req));
               res.end();
-            });;
+            });
+          })
+          .catch(function(error){
+            console.log(error);
+            res.json(responses.handleAction('server_error', req));
+            res.end();
           });
           break;
         default:
@@ -116,7 +123,8 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
       }
     }
     if(item.confirmed) {
-      User.findOne({ _id: remindOMaticId }, function(err, user) {
+      User.findOne({ _id: remindOMaticId })
+      .then(function(user) {
         switch (user.status) {
           case 'first':
             placesearch.sendSingleSearch(res, item);
@@ -132,13 +140,19 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
           case 'forward':
             // finchè non si trova un poi vicino a quello cercato devo chiamare la single
             // dopo posso chiamare la search
-            Item.find({ remindOMaticId: remindOMaticId, type: { '$ne': 'target' } }, function(err, result) {
+            Item.find({ remindOMaticId: remindOMaticId, type: { '$ne': 'target' } })
+            .then(function(result) {
               if(result.length == 0) {
                 placesearch.sendSingleSearch(res, { remindOMaticId: remindOMaticId, geo_poi: apiAiResponse.result.parameters.geo_poi, geo_place: item.geo_place });
               }
               else {
                 placesearch.sendSearch(res, remindOMaticId, apiAiResponse.result.parameters.geo_poi)
               }
+            })
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
             });
             user.status = 'confirmNear';
             user.save()
@@ -149,6 +163,11 @@ exports.place = function(remindOMaticId, req, res, apiAiResponse, item) {
             });
             break;
         }
+      })
+      .catch(function(error){
+        console.log(error);
+        res.json(responses.handleAction('server_error', req));
+        res.end();
       });
     }
   }
@@ -182,9 +201,19 @@ exports.no = function(remindOMaticId, req, res, apiAiResponse, item) {
                 res.json(responses.handleAction('server_error', req));
                 res.end();
               });
+            })
+            .catch(function(error){
+              console.log(error);
+              res.json(responses.handleAction('server_error', req));
+              res.end();
             });
             break;
         }
+      })
+      .catch(function(error){
+        console.log(error);
+        res.json(responses.handleAction('server_error', req));
+        res.end();
       });
     } else {
       // dirgli che prima deve inserire poi e place
