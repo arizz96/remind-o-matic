@@ -119,8 +119,12 @@ exports.sendSearch = function(response, id, poi) {
     return result;
   })
   .then(function(nearbyResults) {
-    customResponse = responses.handleAction('search', res);
-    customResponse['nearbyResults'] = nearbyResults;
+    console.log(nearbyResults);
+    if(nearbyResults != []) {
+      customResponse = responses.handleAction('search', res);
+      customResponse['nearbyResults'] = nearbyResults;
+    } else
+      customResponse = responses.handleAction('server_error', res);
     return customResponse;
   })
   .then(function(customResponse) {
@@ -145,8 +149,12 @@ exports.sendSingleSearch = function(response, i) {
     return result;
   })
   .then(function(nearbyResults) {
-    customResponse = responses.handleAction('search', res);
-    customResponse['nearbyResults'] = nearbyResults;
+    console.log(nearbyResults);
+    if(nearbyResults != []) {
+      customResponse = responses.handleAction('search', res);
+      customResponse['nearbyResults'] = nearbyResults;
+    } else
+      customResponse = responses.handleAction('server_error', res);
     return customResponse;
   })
   .then(function(customResponse) {
