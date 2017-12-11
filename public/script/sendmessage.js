@@ -1,4 +1,5 @@
 function startSession() {
+  _showSpinner(false);
   $.ajax({
     type: 'GET',
     url: 'api/v1/welcome',
@@ -48,8 +49,9 @@ function readRequest(){
   text_input = document.getElementById("text_input");
   if(text_input.value != ''){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
-    writeMessage(text_input.value, 'right');
-    var info = { "text" : text_input.value };
+    writeMessage(message_input.value, 'right');
+    var info = { "text" : message_input.value };
+    _showSpinner(true);
     $.ajax({
       type: 'POST',
       url: 'api/v1/ask',
@@ -57,6 +59,7 @@ function readRequest(){
       contentType: 'application/json',
       data: JSON.stringify(info),
       success: function (data) {
+          _showSpinner(false);
           switch(data.action){
             case 'search':
               if(data.nearbyResults.length > 0) {
@@ -106,8 +109,8 @@ function readRequest(){
   document.getElementById("text_input").focus();
 }
 
-function _showTextInput(flag) {
-  if(flag) {
+function _showTextInput(value) {
+  if(value) {
     document.getElementById('button_poi_div').innerHTML = '';
     document.getElementById('button_poi_div').style.visibility = 'hidden';
     document.getElementById('text_input').style.visibility = 'visible';
@@ -117,6 +120,13 @@ function _showTextInput(flag) {
     document.getElementById('text_input').style.visibility = 'hidden';
     document.getElementById('button_send').style.visibility = 'hidden';
   }
+}
+
+function _showSpinner(value) {
+  if(value)
+    document.getElementById('spinner').style.visibility = 'visible';
+  else
+    document.getElementById('spinner').style.visibility = 'hidden';
 }
 
 function _formatMoreButton(first) {
@@ -141,9 +151,9 @@ function _formatFirstButton() {
   button_input_div = document.getElementById('button_poi_div');
   for(i = 0; i < 5; i++) {
     tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
-    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _cut(_sanitizeString(nearByData.nearbyResults[i].name))+ '</div></div>'
   }
-  button_input_div.innerHTML += '<button class="send_poi" onclick="more()"><div class="text">More...</div></div>';
+  button_input_div.innerHTML += '<button class="send_poi" onclick="more()"><div class="text">More</div></div>';
   _showTextInput(false);
   writeMessage(tmp, 'left');
 }
@@ -151,6 +161,13 @@ function _formatFirstButton() {
 function more() {
   writeMessage('Vorrei visualizzarne altri', 'right');
   _formatMoreButton(false);
+}
+
+function _cut(s) {
+  res = s.substring(0, 20);
+  if(s.length > 20)
+    res += "...";
+  return res;
 }
 
 function _sanitizeString(str) {
@@ -162,6 +179,7 @@ function clickPOI(coords, name) {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage(name, 'right');
+  _showSpinner(true);
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -169,6 +187,7 @@ function clickPOI(coords, name) {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'poi', 'coords': coords, 'name': name}),
     success: function (data) {
+      _showSpinner(false);
       switch(data.action){
         case 'finish':
           writeMessage(data.body, 'left');
@@ -197,6 +216,7 @@ function clickError() {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage("Nessuno di questi", 'right');
+  _showSpinner(true);
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -204,6 +224,7 @@ function clickError() {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'error'}),
     success: function (data) {
+      _showSpinner(false);
       switch(data.action){
         case 'finish':
           writeMessage(data.body, 'left');
