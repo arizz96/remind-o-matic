@@ -1,5 +1,6 @@
 .spinner {
-  bottom: 15%;
+  top: -10.5%;
+  left: 7%;
   position: fixed;
   margin: 100px auto 0;
   width: 70px;
@@ -9,7 +10,7 @@
 .spinner > div {
   width: 18px;
   height: 18px;
-  background-color: var(--c1);
+  background-color: var(--c5);
 
   border-radius: 100%;
   display: inline-block;
