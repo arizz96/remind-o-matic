@@ -55,7 +55,7 @@ body {
 .my-header{
   background-color: var(--c1);
   height: 10%;
-  min-height: 10%;
+  min-height: 45px;
   margin-right: 0px;
   margin-left: 0px;
   padding: 15px
@@ -63,7 +63,7 @@ body {
 
 .chat-container{
   background-color: var(--c4);
-  min-height:82%;
+  min-height:83%;
   position:fixed;
   top:10%;
   bottom:10%;
@@ -74,8 +74,9 @@ body {
 }
 
 .my-footer{
-  background-color: var(--c5);
+  background-color: var(--c4);
   height: 8%;
+  min-height: 34px;
   position: fixed;
   width: 100%;
   padding-right: 10px;
@@ -139,11 +140,23 @@ body {
     background-color: var(--c1);
 }
 
-
-/*@media screen and (maz-width: 480px) {
-  #h-title{
-    font-size : 50%;
-    color: var(--c4);
-    vertical-align: middle;
+@media screen and (max-height:480px){
+  .my-header{
+    padding: 3px;
   }
-}*/
+
+  #h-title{
+    font-size: x-large;
+    padding-top: 7px;
+  }
+
+  #ico{
+    height : 40px;
+    margin-top: auto;
+  }
+
+  #info{
+    height : 40px;
+    margin-top: auto;
+  }
+}

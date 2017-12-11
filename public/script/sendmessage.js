@@ -9,7 +9,7 @@ function startSession() {
       }
   });
   _showTextInput(true);
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementById("text_input").focus();
 }
 
 var Message;
@@ -45,11 +45,11 @@ function writeMessage (text, side) {
 var nearByData = {};
 
 function readRequest(){
-  message_input = document.getElementsByClassName("message_input")[0];
-  if(message_input.value != ''){
+  text_input = document.getElementById("text_input");
+  if(text_input.value != ''){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
-    writeMessage(message_input.value, 'right');
-    var info = { "text" : message_input.value };
+    writeMessage(text_input.value, 'right');
+    var info = { "text" : text_input.value };
     $.ajax({
       type: 'POST',
       url: 'api/v1/ask',
@@ -80,21 +80,21 @@ function readRequest(){
           }
         }
     });
-    message_input.value = '';
+    text_input.value = '';
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementById("text_input").focus();
 }
 
 function _showTextInput(flag) {
   if(flag) {
     document.getElementById('button_poi_div').innerHTML = '';
     document.getElementById('button_poi_div').style.visibility = 'hidden';
-    document.getElementById('text_input_div').style.visibility = 'visible';
+    document.getElementById('text_input').style.visibility = 'visible';
     document.getElementById('button_send').style.visibility = 'visible';
   } else {
     document.getElementById('button_poi_div').style.visibility = 'visible';
-    document.getElementById('text_input_div').style.visibility = 'hidden';
+    document.getElementById('text_input').style.visibility = 'hidden';
     document.getElementById('button_send').style.visibility = 'hidden';
   }
 }
@@ -162,7 +162,7 @@ function clickPOI(coords, name) {
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementById("text_input").focus();
 }
 
 function clickError() {
@@ -192,10 +192,10 @@ function clickError() {
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementsById("text_input").focus();
 }
 
 function checkSend(e){
-  if (e.keyCode == 13 && document.getElementsByClassName("message_input")[0].value != "")
+  if (e.keyCode == 13 && document.getElementById("text_input").value != "")
     readRequest();
 }
