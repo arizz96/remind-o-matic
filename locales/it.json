@@ -15,5 +15,6 @@
   "help"  :         "Remind-O-Matic ti permette di ricordare alcuni ricordi che davi per dimenticati. Infatti, inserendo un luogo e un punto di interesse ad esso associato, può trovare luoghi che rispettano i dati inseriti. Si potrà in futuro fare delle ricerche sulla base di quello che hanno fatto i propri amici. Il progetto è stato realizzato da: Alessandro Rizzo, Leonardo Dal Ronco, Giulio Pellizzari, Domenico Stefani, Matteo Tadiello, durante il terzo anno di studi all'università di Trento, corso di laurea in informatica.",
   "finish":       "Bene! Siamo felici di averti aiutato a ricordare!",
   "error_finish": "Ci dispiace di non essere riusciti ad aiutarti a ricordare!",
-  "search":       "Ecco i posti che abbiamo trovato. È uno di questi?"
+  "search":       "Ecco i posti che abbiamo trovato. È uno di questi?",
+  "server_error": "Siamo spiacenti ma momentaneamente il server non risponde. Vi chiediamo gentilmente di ricaricare la pagina e provare ad iniziare una nuova ricerca. Ci scusiamo per il disagio."
 }

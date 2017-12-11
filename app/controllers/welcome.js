@@ -1,4 +1,5 @@
 var User = require('../models/user');
+var responses   = require('../modules/responses');
 
 exports.show = function(req, res) {
   // creo la entry nel DB
@@ -7,8 +8,11 @@ exports.show = function(req, res) {
   user.timeStamp = Date.now();
   console.log("set status to first");
   user.status = 'first';
-  user.save(function (err) {
-    if (err) { res.send(err); }
+  user.save()
+  .catch(function(error){
+    console.log(error);
+    res.json(responses.handleAction('server_error', req));
+    res.end();
   });
 
   // creo il remindOMaticId, e gli assegno l'_id dell'user appena creato
