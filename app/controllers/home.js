@@ -28,7 +28,7 @@ exports.ask = function(req, res) {
           break;
         }
     });
-
+  });
   request.on('error', function(error) {
     console.log(error);
     res.json(responses.handleAction('server_error', req));
