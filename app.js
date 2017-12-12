@@ -5,7 +5,6 @@ var expressSession = require('express-session');
 var app = express();
 var dotenv = require('dotenv').config();
 var i18n = require('i18n');
-var multer = require('multer')
 var constants = require('constants');
 var constant = require('./config/constants');
 var apiai = require('apiai');
@@ -19,7 +18,6 @@ global.maps = googleMaps.createClient({
 
 var port = process.env.PORT || 8042;
 var mongoose = require('mongoose');
-var flash = require('connect-flash');
 var path = require('path');
 
 var morgan = require('morgan');
@@ -27,7 +25,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var dateFormat = require('dateformat');
 var now = new Date();
 
 app.use(bodyParser.json());
