@@ -108,7 +108,7 @@
 }
 
 .send_poi {
-  margin: 0 10px 0 10px;
+  margin: 0 0.3% 0 0.3%;
   color: var(--c5);
   background-color: var(--c1);
   height: 90%;
