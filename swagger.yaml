@@ -2,7 +2,8 @@ swagger: "2.0"
 info:
   version: 1.0.0
   title: "Remind-o-matic"
-  description: Remind-o-matic API
+  description: |
+    API used by the first release of Remind-o-matic.
   termsOfService: http://swagger.io/terms/
   contact:
     name: Swagger API Team
@@ -11,8 +12,8 @@ info:
   license:
     name: MIT
     url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
-host: petstore.swagger.io
-basePath: /api
+host: remind-o-matic.herokuapp.com
+basePath: /api/v1
 schemes:
   - http
 consumes:
@@ -23,30 +24,30 @@ paths:
   /welcome:
     get:
       description: |
-        Returns a welcome message
+        Returns a welcome message. Moreover, it sets a client-side cookie, which allows to identify the user who is conversing with the bot. It is fundamental to start the conversation with the bot.
       operationId: welcome
       responses:
         200:
           description: remind-o-matic welcome
           schema:
-            $ref: '#/definitions/Text'
+            $ref: '#/definitions/Answer_welcome'
         default:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
   
-  /info:
+  /help:
     get:
       description: |
-        Returns a info message.
+        Returns a message containing general information about Remind-o-matic.
         
-      operationId: info
+      operationId: help
       
       responses:
         200:
           description: remind-o-matic info
           schema:
-            $ref: '#/definitions/Text'
+            $ref: '#/definitions/Answer_info'
         default:
           description: unexpected error
           schema:
@@ -55,7 +56,8 @@ paths:
   /ask:
     post:
       description: |
-        Ask a question to the bot
+        Asks Remind-o-matic a question. It is essential to have performed "/welcome" before asking any questions.
+        Returns Remind-o-matic's answer to the question.
       operationId: addPet
       parameters:
         - name: text
@@ -68,22 +70,84 @@ paths:
         200:
           description: answer
           schema:
-            $ref: '#/definitions/Text'
+            $ref: '#/definitions/Answer_ask'
         default:
           description: unexpected error
           schema:
             $ref: '#/definitions/Error'
-  
 
 definitions:
+  Answer_welcome:
+    required:
+      - status
+      - action
+      - body
+    properties:
+      status:
+        type: integer
+        format: int32
+        enum:
+        - 200
+      action:
+        type: string
+        enum:
+        - welcome
+      body:
+        type: string
+        enum:
+        - Ciao, sono Remind-O-Matic! Sono qui per aiutarti a ricordare i dettagli di un evento di cui non ricordi i particolari. In ogni momento puoi scrivere /help o cliccare il tasto a fianco della chat e ti manderò le istruzioni. Se vuoi ricordarti i dettagli di un evento particolare prova a dirmi quello che ti viene in mente di quel giorno.
+
+  Answer_info:
+    required:
+      - status
+      - action
+      - body
+    properties:
+      status:
+        type: integer
+        format: int32
+        enum:
+        - 200
+      action:
+        type: string
+        enum:
+        - help
+      body:
+        type: string
+        enum:
+        - Remind-O-Matic ti permette di ricordare alcuni ricordi che davi per dimenticati. Infatti, inserendo un luogo e un punto di interesse ad esso associato, può trovare luoghi che rispettano i dati inseriti. Si potrà in futuro fare delle ricerche sulla base di quello che hanno fatto i propri amici.
+  
+  Answer_ask:
+    required:
+      - status
+      - action
+      - body
+    properties:
+      status:
+        type: integer
+        format: int32
+        enum:
+        - 200
+      action:
+        type: string
+        enum:
+        - unknown
+        - no
+        - miss_poi
+        - miss_place
+        - forward
+        - search
+        - finish
+        - error_finish
+      body:
+        type: string
+  
   Text:
-    allOf:
-      - $ref: '#/definitions/Text'
-      - required:
-        - text
-        properties:
-          text:
-            type: string
+    required:
+      - text
+    properties:
+      text:
+        type: string
   
   Error:
     required:
