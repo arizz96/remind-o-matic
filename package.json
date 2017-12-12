@@ -20,7 +20,8 @@
     "googlemaps": "^1.12.0",
     "i18n": "^0.8.3",
     "md5": "^2.2.1",
-    "mongoose": "^4.13.7",
+    "mockingoose": "^2.4.0",
+    "mongoose": "^4.13.6",
     "morgan": "^1.9.0",
     "node-constants": "0.0.2",
     "nodemon": "^1.12.5",
@@ -28,6 +29,14 @@
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "serve-favicon": "^2.4.5",
+    "supertest": "^3.0.0",
+    "tape": "^4.8.0",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }

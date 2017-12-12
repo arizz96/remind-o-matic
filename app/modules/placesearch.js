@@ -62,7 +62,7 @@ singlePoi = function(remindOMaticId, keyword) {
     for(i = 0; i < items.length; i++)
       if(items[i].type == "target")
         targetItem = items[i];
-    var url = "https://" + process.env.MAPS_HOST + process.env.MAPS_PLACE_URL + process.env.FORMAT + "?key=" + process.env.MAPS_KEY + "&address=" + targetItem.geo_place;
+    var url = "https://" + process.env.MAPS_HOST + process.env.MAPS_PLACE_URL + process.env.FORMAT + "?key=" + process.env.MAPS_KEY + "&address=" + targetItem.geo_place + ",Italy";
     return rp(url);
   })
   .then(function(repos) {

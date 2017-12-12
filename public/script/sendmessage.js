@@ -50,7 +50,7 @@ function readRequest(){
   if(text_input.value != ''){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
     writeMessage(text_input.value, 'right');
-    var info = { "text" : text_input.value };
+    var info = { "text" : _sanitizeString(text_input.value) };
     _showSpinner(true);
     $.ajax({
       type: 'POST',
@@ -171,8 +171,14 @@ function _cut(s) {
 }
 
 function _sanitizeString(str) {
-    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim," ");
-    return str.trim();
+  str = str.replace(/[^a-z0-9áàèéíóúñü \.,_-]/gim," ");
+  str = str.replace(/[áà]/gim,"a");
+  str = str.replace(/[èé]/gim,"e");
+  str = str.replace(/[í]/gim,"i");
+  str = str.replace(/[ó]/gim,"o");
+  str = str.replace(/[úü]/gim,"u");
+  str = str.replace(/[ñ]/gim,"n");
+  return str;
 }
 
 function clickPOI(coords, name) {
