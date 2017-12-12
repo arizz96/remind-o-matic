@@ -1,21 +1,17 @@
 function startSession() {
+  _showSpinner(false);
   $.ajax({
     type: 'GET',
     url: 'api/v1/welcome',
     acceptedLanguage: 'it',
     contentType: 'application/json',
     success: function (data) {
-        // console.log(data.action);
         writeMessage(data.body, 'left');
       }
   });
   _showTextInput(true);
-  document.getElementsByClassName("message_input")[0].focus();
-  // console.log("setted focus");
+  document.getElementById("text_input").focus();
 }
-
-
-
 
 var Message;
 Message = function (arg) {
@@ -35,12 +31,7 @@ Message = function (arg) {
 };
 
 function writeMessage (text, side) {
-  // alert("writing message " + text);
   var $messages, message;
-  // if (text.trim() === '') {
-  //     return;
-  // }
-  //$('.message_input').val('');
   $messages = $('.messages');
   message_side = side;
   message = new Message({
@@ -50,21 +41,17 @@ function writeMessage (text, side) {
   message.draw();
   var elem = document.getElementById('chat_body');
   elem.scrollTop = elem.scrollHeight;
-  // return $messages.animate({ scrollTop: $messages.prop('scrollHeight') }, 300);
 };
 
-function readRequest(){
-  // alert("inizio read");
-  // writeMessage('response', 'left');
-  // alert("stampato response");
-  message_input = document.getElementsByClassName("message_input")[0];
-  if(message_input.value != ''){
-    document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
-    // console.log(message_input.value);
-    writeMessage(message_input.value, 'right');
-    var info = { "text" : message_input.value };
-    // console.log(info);
+var nearByData = {};
 
+function readRequest(){
+  text_input = document.getElementById("text_input");
+  if(text_input.value != ''){
+    document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
+    writeMessage(text_input.value, 'right');
+    var info = { "text" : text_input.value };
+    _showSpinner(true);
     $.ajax({
       type: 'POST',
       url: 'api/v1/ask',
@@ -72,65 +59,119 @@ function readRequest(){
       contentType: 'application/json',
       data: JSON.stringify(info),
       success: function (data) {
-          // use data
-          // console.log(data.action);
+          _showSpinner(false);
           switch(data.action){
             case 'search':
-              // writeMessage(data.body, 'left');
-              // console.log(data);
-              // console.log(data.nearbyResults);
-              var tmp = data.body + '<br />';
-              if(data.nearbyResults.length > 0){
-                // for(i = 0; i < data.nearbyResults.length; i++)
-                  // tmp += '<button onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>, ' + _sanitizeString(data.nearbyResults[i].address) + ' </button><br />';
-                tmp = _formatButton(data);
-                tmp += '- Nessuno di questi<br />'
-                writeMessage(tmp, 'left');
+              if(data.nearbyResults.length > 0) {
+                nearByData = data;
+                if(data.nearbyResults.length > 5)
+                  _formatFirstButton(data);
+                else
+                  _formatMoreButton(true);
+
               } else {
-              //   writeMessage(data.body, 'left');
+                $.ajax({
+                  type: 'POST',
+                  url: 'api/v1/push',
+                  acceptedLanguage: 'it',
+                  contentType: 'application/json',
+                  data: JSON.stringify({ type: 'error'}),
+                  success: function (data) {
+                    writeMessage("Non è stato trovato nessun posto del tipo cercato. Ricordi qualcosa altro?", 'left');
+                  }
+                });
+                document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
+                document.getElementsById("text_input").focus();
               }
               break;
-              default: writeMessage(data.body, 'left');
+            case 'finish':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
+              break;
+            case 'error_finish':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+              break;
+            case 'server_error':
+              writeMessage(data.body, 'left');
+              location.href='#popup';
+              writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+              break;
+            default: writeMessage(data.body, 'left');
           }
-
         }
     });
-    message_input.value = '';
-
+    text_input.value = '';
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
   }
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementById("text_input").focus();
 }
 
-function _showTextInput(flag) {
-  if(flag) {
+function _showTextInput(value) {
+  if(value) {
     document.getElementById('button_poi_div').innerHTML = '';
     document.getElementById('button_poi_div').style.visibility = 'hidden';
-    document.getElementById('text_input_div').style.visibility = 'visible';
+    document.getElementById('text_input').style.visibility = 'visible';
     document.getElementById('button_send').style.visibility = 'visible';
-
   } else {
     document.getElementById('button_poi_div').style.visibility = 'visible';
-    document.getElementById('text_input_div').style.visibility = 'hidden';
+    document.getElementById('text_input').style.visibility = 'hidden';
     document.getElementById('button_send').style.visibility = 'hidden';
   }
 }
 
-function _formatButton(data) {
-  tmp = '';
-  button_input_div = document.getElementById('button_poi_div');
-  for(i = 0; i < data.nearbyResults.length; i++) {
-    tmp += '- <b>' + _sanitizeString(data.nearbyResults[i].name) + '</b>,' +  _sanitizeString(data.nearbyResults[i].address) + '<br />';
-    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + data.nearbyResults[i].coords + '\', \'' + _sanitizeString(data.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(data.nearbyResults[i].name)+ '</div></div>'
-  }
-
-  button_input_div.innerHTML += '<button class="send_poi" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
-  _showTextInput(false);
-  return tmp;
+function _showSpinner(value) {
+  if(value)
+    document.getElementById('spinner').style.visibility = 'visible';
+  else
+    document.getElementById('spinner').style.visibility = 'hidden';
 }
 
-function _sanitizeString(str){
-    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim,"");
+function _formatMoreButton(first) {
+  tmp = nearByData.body + '<br />';
+  button_input_div = document.getElementById('button_poi_div');
+  button_input_div.innerHTML = '';
+  for(i = (first?0 : 5); i < nearByData.nearbyResults.length; i++) {
+    tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _sanitizeString(nearByData.nearbyResults[i].name)+ '</div></div>'
+  }
+  if(first)
+    _showTextInput(false);
+  button_input_div.innerHTML += '<button class="send_poi" onclick="clickError()"><div class="text">Nessuno di questi</div></div>';
+  tmp += '- Nessuno di questi<br />';
+  if(first)
+    _showTextInput(false);
+  writeMessage(tmp, 'left');
+}
+
+function _formatFirstButton() {
+  tmp = nearByData.body + '<br />';
+  button_input_div = document.getElementById('button_poi_div');
+  for(i = 0; i < 5; i++) {
+    tmp += '- <b>' + _sanitizeString(nearByData.nearbyResults[i].name) + '</b>,' +  _sanitizeString(nearByData.nearbyResults[i].address) + '<br />';
+    button_input_div.innerHTML += '<button class="send_poi" onclick="clickPOI(\'' + nearByData.nearbyResults[i].coords + '\', \'' + _sanitizeString(nearByData.nearbyResults[i].name) +'\')"><div class="text">' + _cut(_sanitizeString(nearByData.nearbyResults[i].name))+ '</div></div>'
+  }
+  button_input_div.innerHTML += '<button class="send_poi" onclick="more()"><div class="text">More</div></div>';
+  _showTextInput(false);
+  writeMessage(tmp, 'left');
+}
+
+function more() {
+  writeMessage('Vorrei visualizzarne altri', 'right');
+  _formatMoreButton(false);
+}
+
+function _cut(s) {
+  res = s.substring(0, 20);
+  if(s.length > 20)
+    res += "...";
+  return res;
+}
+
+function _sanitizeString(str) {
+    str = str.replace(/[^a-z0-9áéíóúñü \.,_-]/gim," ");
     return str.trim();
 }
 
@@ -138,6 +179,7 @@ function clickPOI(coords, name) {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage(name, 'right');
+  _showSpinner(true);
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -145,18 +187,36 @@ function clickPOI(coords, name) {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'poi', 'coords': coords, 'name': name}),
     success: function (data) {
-      writeMessage(data.body, 'left');
+      _showSpinner(false);
+      switch(data.action){
+        case 'finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'server_error':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        default: writeMessage(data.body, 'left');
+      }
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementById("text_input").focus();
 }
 
 function clickError() {
   _showTextInput(true);
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
   writeMessage("Nessuno di questi", 'right');
-  // console.log("entrato in error");
+  _showSpinner(true);
   $.ajax({
     type: 'POST',
     url: 'api/v1/push',
@@ -164,15 +224,32 @@ function clickError() {
     contentType: 'application/json',
     data: JSON.stringify({ type: 'error'}),
     success: function (data) {
-      // console.log(data);
-      writeMessage(data.body, 'left');
+      _showSpinner(false);
+      switch(data.action){
+        case 'finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Yeees!', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'error_finish':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        case 'server_error':
+          writeMessage(data.body, 'left');
+          location.href='#popup';
+          writeInfo('Sorry', data.body, 'Prova di nuovo', 'index.html');
+          break;
+        default: writeMessage(data.body, 'left');
+      }
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
-  document.getElementsByClassName("message_input")[0].focus();
+  document.getElementById("text_input").focus();
 }
 
 function checkSend(e){
-  if (e.keyCode == 13 && document.getElementsByClassName("message_input")[0].value != "")
+  if (e.keyCode == 13 && document.getElementById("text_input").value != "")
     readRequest();
 }

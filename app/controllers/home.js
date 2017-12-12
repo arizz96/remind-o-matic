@@ -26,12 +26,13 @@ exports.ask = function(req, res) {
           res.json(responses.handleAction('unknown', req));
           res.end();
           break;
-      }
+        }
     });
   });
-
   request.on('error', function(error) {
     console.log(error);
+    res.json(responses.handleAction('server_error', req));
+    res.end();
   });
   request.end();
 }
@@ -51,6 +52,11 @@ exports.push = function(req, res) {
     } else {
       push.noMatch(remindOMaticId, req, res, user);
     }
+  })
+  .catch(function(error){
+    console.log(error);
+    res.json(responses.handleAction('server_error', req));
+    res.end();
   });
 }
 
