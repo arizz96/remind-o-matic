@@ -1,0 +1,56 @@
+.my-info-button {
+  background-color: var(--c3);
+  border-color: var(--c2);
+  color: var(--black);
+}
+
+.my-info-button:hover{
+  background-color: var(--c2);
+  border-color: var(--c3);
+  color: var(--white);
+}
+
+.overlay {
+  position: fixed;
+  top: 10%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 10, 0.6);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.overlay:target {
+  visibility: visible;
+  opacity: 1;
+}
+
+.popup {
+  color : var(--c1);
+  margin-top: 10px;
+  margin-bottom: auto;
+  padding: 20px;
+  background: var(--c5);
+  border-radius: 6px;
+}
+
+#popupTitle{
+  margin-top: 10px;
+  color: var(--c1);
+  font-family: Tahoma, Arial, sans-serif;
+}
+#popupClose {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  transition: all 200ms;
+  font-size: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  color: var(--c1);
+}
+#popupClose:hover {
+  color: var(--c3);
+}

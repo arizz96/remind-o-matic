@@ -1,0 +1,168 @@
+html{
+  height: 100%;
+  --c1: #112236;
+  --c2: #436280;
+  --c3: #A3BAD2;
+  --c4: #DBE4ED;
+  --c5: #F7F7F7;
+}
+
+body {
+  font-family: "Calibri", "Roboto", sans-serif;
+  min-height: 100%;
+  height:100%
+}
+
+h1{
+  padding-top: 4px;
+  margin-bottom: 0;
+}
+
+#ico{
+  height : 50px;
+  width :auto;
+  margin-top: -7px;
+  float: left;
+  cursor: pointer;
+}
+
+#info{
+  height : 50px;
+  width :auto;
+  margin-top: -7px;
+  float: right;
+  cursor: pointer;
+}
+
+#h-title{
+  font-size : 4vh;
+  font-weight: 700;
+  color: var(--c4);
+  vertical-align: middle;
+}
+
+.h-button{
+  font-weight: bold;
+  display: table;
+  margin-left: auto;
+  border: 2px solid var(--c2);
+  background-color: var(--c2);
+  color: var(--c4);
+  transition: all 0.5s;
+/*  width: 10%;
+  margin-right: 45%;
+  margin-left: 45%;*/
+}
+
+.h-button:hover{
+  background-color: var(--c3);
+  color: var(--c2);
+}
+
+.my-header{
+  background-color: var(--c1);
+  height: 10%;
+  min-height: 45px;
+  margin-right: 0px;
+  margin-left: 0px;
+  padding: 15px
+}
+
+.chat-container{
+  background-color: var(--c4);
+  min-height:83%;
+  position:fixed;
+  top:10%;
+  bottom:10%;
+  overflow-y: scroll;
+  width: 100%;
+  width: -webkit-fill-available; /*Chrome*/
+  width: -moz-available; /*Firefox*/
+}
+
+.my-footer{
+  background-color: var(--c4);
+  height: 8%;
+  min-height: 34px;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
+}
+
+.poi-footer{
+  background-color: var(--c4);
+  height: 8%;
+  min-height: 34px;
+  position: fixed;
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0;
+  align-items: center;
+}
+
+.middle-column{
+    float: none;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.info-container{
+  background-color: var(--c4);
+  height:90%;
+  overflow-y: auto;
+  position:fixed;
+  top:10%;
+}
+
+.info-box{
+  color: var(--c1);
+  background-color: var(--c5);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 20px;
+  border-radius: 6px;
+  position: relative;
+}
+
+.info-home-button{
+  color: var(--c1);
+  background-color: var(--c5);
+  text-align: center;
+  padding: 20px;
+  border-radius: 6px;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.info-home-button:hover{
+    color: var(--c5);
+    background-color: var(--c1);
+}
+
+@media screen and (max-height:480px){
+  .my-header{
+    padding: 3px;
+  }
+
+  #h-title{
+    font-size: x-large;
+    padding-top: 7px;
+  }
+
+  #ico{
+    height : 40px;
+    margin-top: auto;
+  }
+
+  #info{
+    height : 40px;
+    margin-top: auto;
+  }
+}
