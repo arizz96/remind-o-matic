@@ -19,7 +19,6 @@ global.maps = googleMaps.createClient({
 
 var port = process.env.PORT || 8042;
 var mongoose = require('mongoose');
-var passport = require('passport');
 var flash = require('connect-flash');
 var path = require('path');
 
@@ -51,9 +50,7 @@ var options = {
     //pass: ''
   };
 mongoose.connect(configDB.url, options); // connect to our database
-mongoose.Promise = Promise; 
-
-require('./config/passport')(passport); // pass passport for configuration
+mongoose.Promise = Promise;
 
 //set up our express application
 app.use(morgan('dev')); // log every request to the console
@@ -64,7 +61,7 @@ app.set('view engine', 'ejs');
 //app.set('view engine', 'ejs'); // set up ejs for templating
 
 // routes ======================================================================
-require('./config/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./config/routes.js')(app); // load our routes and pass in our app and fully configured passport
 
 // session
 app.use(cookieParser());
