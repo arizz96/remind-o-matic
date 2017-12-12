@@ -13,11 +13,17 @@ body {
   height:100%
 }
 
+h1{
+  padding-top: 4px;
+  margin-bottom: 0;
+}
+
 #ico{
   height : 50px;
   width :auto;
   margin-top: -7px;
   float: left;
+  cursor: pointer;
 }
 
 #info{
@@ -25,6 +31,7 @@ body {
   width :auto;
   margin-top: -7px;
   float: right;
+  cursor: pointer;
 }
 
 #h-title{
@@ -87,18 +94,17 @@ body {
 }
 
 .poi-footer{
-  background-color: var(--c5);
+  background-color: var(--c4);
   height: 8%;
+  min-height: 34px;
   position: fixed;
   width: 100%;
   padding-right: 10px;
   padding-left: 10px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 1%;
-  margin-bottom: 1%;
   bottom: 0;
-  text-align: center;
+  align-items: center;
 }
 
 .middle-column{
