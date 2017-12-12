@@ -16,8 +16,6 @@ global.maps = googleMaps.createClient({
   Promise: Promise
 });
 
-var port = process.env.PORT || 8042;
-var mongoose = require('mongoose');
 var path = require('path');
 
 var morgan = require('morgan');
@@ -40,13 +38,13 @@ app.use(i18n.init);
 /***************Mongodb configuratrion********************/
 var mongoose = require('mongoose');
 var configDB = require('./config/database.js');
+
 //configuration ===============================================================
 var options = {
-    useMongoClient: true,
-    //user: '',
-    //pass: ''
-  };
-mongoose.connect(configDB.url, options); // connect to our database
+  useMongoClient: true,
+};
+
+mongoose.connect(configDB.url, options);
 mongoose.Promise = Promise;
 
 //set up our express application
@@ -71,10 +69,6 @@ app.use(function(req, res, next) {
   res.locals.session = req.session;
   next();
 });
-
-//launch ======================================================================
-app.listen(port);
-console.log('The magic happens on port ' + port);
 
 //catch 404 and forward to error handler
 app.use(function (req, res, next) {
