@@ -49,8 +49,8 @@ function readRequest(){
   text_input = document.getElementById("text_input");
   if(text_input.value != ''){
     document.getElementsByClassName('send_message')[0].style.pointerEvents = 'none';
-    writeMessage(message_input.value, 'right');
-    var info = { "text" : message_input.value };
+    writeMessage(text_input.value, 'right');
+    var info = { "text" : text_input.value };
     _showSpinner(true);
     $.ajax({
       type: 'POST',
@@ -81,7 +81,7 @@ function readRequest(){
                   }
                 });
                 document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
-                document.getElementsByClassName("message_input")[0].focus();
+                document.getElementsById("text_input").focus();
               }
               break;
             case 'finish':
@@ -246,7 +246,7 @@ function clickError() {
     }
   });
   document.getElementsByClassName('send_message')[0].style.pointerEvents = 'auto';
-  document.getElementsById("text_input").focus();
+  document.getElementById("text_input").focus();
 }
 
 function checkSend(e){
